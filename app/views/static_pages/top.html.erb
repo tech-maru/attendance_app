@@ -1,0 +1,13 @@
+<% provide(:title, "") %>
+
+<div class="jumbotron">
+  <h1>勤怠管理システム</h1>
+  <button class="btn btn-lg btn-primary btn-format"><%= link_to "ログイン", login_path %></button>
+  <p>アカウント作成は<%= link_to "こちら", new_user_path %>から</p>
+</div>
+<div class="sp-btn">
+  <button class="btn btn-lg btn-danger"><%= link_to "管理者権限", test_admin_path %></button>
+  <button class="btn btn-lg btn-warning"><%= link_to "上長権限", test_superior_path %></button>
+  <button class="btn btn-lg btn-success"><%= link_to "ユーザーA権限", test_login_a_path %></button>
+  <button class="btn btn-lg btn-success"><%= link_to "ユーザーB権限", test_login_b_path %></button>
+</div>

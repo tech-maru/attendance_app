@@ -1,0 +1,15 @@
+<%= provide(:title, "基本勤怠情報の更新") %>
+
+<h2>基本勤怠情報の更新(一括更新）</h2>
+<div class="col-md-6 col-md-offset-3">
+  <%= form_with(url: basic_info_update_path, method: :patch, local: true) do |f| %> 
+  
+    <%= f.label :"基本時間", class: "label-form" %>
+    <%= f.time_field :basic_time, class: "form-control" %>
+  
+    <%= f.label :"勤務時間", class: "label-form" %>
+    <%= f.time_field :work_time, class: "form-control" %>
+    
+    <%= f.submit "更新", class: "btn btn-primary btn-block btn-signup" %>
+  <% end %>
+</div>

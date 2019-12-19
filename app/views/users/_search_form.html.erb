@@ -1,0 +1,8 @@
+<%= form_with(model: @user, url: index_result_path, method: :get, local: true) do |f| %>
+  <%= f.label :ユーザー検索, class: "label-form" %><br> 
+  <%= f.text_field :search, class: "form-search", placeholder: "#{@search}" %>  
+  <%= f.submit "検索", class: "btn btn-primary" %>
+<% end %>
+
+    
+   

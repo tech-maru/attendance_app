@@ -1,0 +1,51 @@
+<!-- モーダルの適切な幅とマージンを設定 -->
+<div class="modal-dialog">
+  <!-- モーダルコンテンツ:モーダルに表示させる内容-->
+  <div class="modal-content">
+    <!-- &timesは「×ボタン」の表示-->
+      <div class="modal-body over-app-area">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <%= form_with(model: @overtimenotification, url: attendances_overtime_update_user_path(current_user), method: :patch, local: true) do |f| %>
+          <% @notificated_group.each do |key, applicated_notifications| %>
+            
+            <% set_applicated_user(key) %>
+            <h4>【<%= @applicated_user_name %>】からの残業申請</h4>
+            <table class="table table-bordered over-appli-table">
+              <thead>
+                  <tr>
+                  　<th>日付</th>
+                    <th>曜日</th>
+                    <th>終了予定時刻</th>
+                    <th>指定勤務終了時間</th>
+                    <th>時間外時間</th>
+                    <th>業務処理内容</th>
+                    <th>指示者確認㊞</th>
+                    <th>変更</th>
+                    <th>勤怠を確認する</th>
+                  </tr>
+              </thead>
+              <% applicated_notifications.each do |applicated_notification| %>
+                 <%= f.fields_for "overtimenotifications[]", applicated_notification do |fi| %>
+                  <tbody>
+                    <tr>
+                      <% set_applicated_attendance(applicated_notification) %>
+                        <td><%= l(@applicated_worked_on, format: :short) %></td>
+                        <td class="<%= wday_color(@applicated_worked_on.wday) %>"><%= $days_of_the_week[@applicated_worked_on.wday] %></td>
+                        <td><%= l(applicated_notification.scheduled_end_time.floor_to(15.minutes), format: :time) %></td>
+                        <td><%= l(@applicated_user_designated_end_time, format: :time) %></td>
+                        <td><%= overtime(applicated_notification, @applicated_user) %></td>
+                        <td><%= applicated_notification.note %></td>
+                        <td><%= fi.select :status, ["", "waiting", "applicate", "denial"], {prompt: "申請中"} %></td>
+                        <td><%= fi.check_box :checked, {}, checked_value = "true",unchecked_value = "false" %></td>
+                        <td><%= link_to "確認", user_path(@applicated_user, date:@applicated_worked_on.beginning_of_month), class: "btn btn-primary" %></td>
+                    </tr>
+                  </tbody>
+                  <% end %>
+              <% end %> 
+            </table>
+          <% end %>
+          <%= f.submit "変更を送信する", class: "btn btn-primary" %>
+        <% end %>
+    </div>
+  </div>
+</div>                                    

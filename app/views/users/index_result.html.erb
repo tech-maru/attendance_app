@@ -1,0 +1,34 @@
+<%= provide(:title, "ユーザー一覧") %>
+
+<h2>ユーザー一覧(検索結果）</h2>
+  <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-6">
+    </div>
+    <div class="col-md-4 search-container">
+        <%= render "search_form" %>
+    </div>
+    
+    <table class="table table-hover table-users">
+      <thead>
+        <tr>
+          <th class="col-md-6">ユーザー名</th>
+          <th>個別勤怠情報</th>
+          <th class="text-center">ユーザー情報</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+        <tr>
+          <td class="text-left"><%= link_to user.name , user_path(user) %></td>
+          <td><button class="btn btn-md btn-success"><%= link_to "基本情報編集", edit_basic_info_user_path(user) %></button></td>
+          <td class="text-center">
+            <button class="btn btn-md btn-warning"><%= link_to "編集", edit_user_path(user) %></button>
+            <button class="btn btn-md btn-danger"><%= link_to "削除", user_path(user), method: :delete, data: { confirm: "削除してよろしいですか？" } %></button>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+

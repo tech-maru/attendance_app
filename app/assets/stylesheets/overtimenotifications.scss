@@ -1,0 +1,20 @@
+// Place all the styles related to the overtimenotifications controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+/* overtimeapplication */
+.over-app-area {
+  h4 {
+    margin-bottom: 0!important;
+  }
+}
+
+.over-appli-table {
+  margin-top: 0!important;
+  margin-bottom: 30px!important;
+  th, td {
+    text-align: center;
+    vertical-align: middle!important;
+  }
+  
+}

@@ -1,0 +1,66 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+/* basic_format */
+
+body {
+  padding-top: 60px;
+}
+
+section {
+  overflow: auto;
+}
+
+textarea {
+  resize: vertical;
+}
+
+h1 {
+  font-size: 3.5em!important;
+  text-align: center;
+}
+
+h2 {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.w-100 {
+  width: 100%!important;
+}
+
+
+/* header */
+
+#logo {
+  float: left;
+  font-size: 1.7em;
+  color: white;
+}
+
+.container a {
+  text-decoration: none;
+  margin-top: 14px;
+}
+
+/* debug_info */
+
+.debug_dump {
+  margin-top : 40px;
+}
+
+/* error_messages */
+
+.error-table {
+  color: red;
+  li {
+    color: red;
+  }
+}
+
+.field_with_errors {
+  @extend .has-error;
+  .form-control{
+    color: #a94442;
+  }
+}

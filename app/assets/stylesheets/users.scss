@@ -1,0 +1,155 @@
+/* 共通 */
+
+.btn {
+  a {
+     text-decoration: none;
+     color: white;
+  }
+}
+
+
+/* new */
+
+.account-table {
+  text-align: left;
+}
+
+.label-form {
+  margin-top: 10px;
+}
+
+.btn-signup {
+  margin: 15px auto;
+}
+
+/* index */
+
+.input-group {
+  margin-top: 20px;
+  margin-bottom: 5px;
+  label, span {
+    margin-left: 0!important;
+  }
+  .form-control {
+    background-color: white;
+  }
+}
+
+.submit-table {
+  padding-left: 0!important;
+  padding-right: 0!important;
+}
+
+.submit-btn {
+  width: 100%!important;
+  }
+
+.custom-field {
+  display: none!important;
+}
+
+.index-area {
+  span{
+  margin: auto 8px auto auto;
+  }
+}
+
+
+.btn-space {
+  padding : 15px;
+  background-color: #EEE;
+  margin-bottom : 15px;
+}
+
+.edit-area {
+  border : solid 1px #EEE;
+  padding : 10px;
+}
+
+
+.search-container {
+  float: right;
+  .form-search {
+    height: 33px;
+    padding-right: 0;
+  }
+}
+
+.table-users {
+  margin-top: 20px;
+  th, td {
+    text-align: center;
+    vertical-align: middle!important;
+    a{
+      text-decoration: none;
+    }
+  }  
+}
+
+
+/* show */
+
+.user-table {
+  margin-top: 40px;
+  tr {
+    td{
+      text-align: center;
+      vertical-align: middle!important;
+      a {
+        text-decoration: none;
+       }
+    }
+  }
+}
+
+span {
+  margin: auto 20px;
+}
+
+.notifications {
+  margin-bottom: 20px;
+  span {
+    font-size: larger;
+    border: solid 3px #A94442;
+    margin: auto 10px;
+    a {
+      color: #A94442;
+    }
+  }
+}
+
+.attendances-table {
+  margin-top: 10px;
+  tr {
+    th, td{
+      text-align: center;
+      vertical-align: middle!important;
+      a {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+.btn-select {
+  float: right;
+  a {
+  color: #333;
+  }
+}
+
+.total-table {
+  background-color: #d0d0d0!important;
+  text-align: center;
+}
+
+
+/* modal-display */
+.modal-dialog {
+  width: 70vw!important;
+}
+
+.modal-body {
+  text-align: center;
+}
+

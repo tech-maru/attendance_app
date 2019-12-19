@@ -1,0 +1,161 @@
+<% provide(:title, @user.name) %>
+<div>
+  <table class="table table-bordered table-condensed user-table">
+    <tr>
+      <td>
+        <% if current_user?(@user) %>
+        <button class="btn btn-primary"><%= link_to "←", user_path(date: @first_day.prev_month) %></button>
+        <% end %>
+        <span>【<%= l(@first_day, format: :middle) %>】時間管理表</span>
+        <% if current_user?(@user) %>
+        <button class="btn btn-primary"><%= link_to "→", user_path(date: @first_day.next_month) %></button>
+        <% end %>
+      </td>
+      <td colspan="2">指定勤務開始時間<span><%= l(@user.designated_work_start_time, format: :time) %></span></br>
+                      指定勤務終了時間<span><%= l(@user.designated_work_end_time, format: :time) %></span>
+      </td>
+      <td colspan="2">基本時間
+      <span>
+      <% if @user.basic_work_time.present? %>
+      <%= l(@user.basic_work_time, format: :time) %>
+      <% end %>
+      </span></td>
+      <td>初日<span><%= l(@first_day, format: :short) %></span></td>
+    </tr>
+
+    <tr>
+      <td>所属:<%= @user.affiliation.present? ? @user.affiliation : "未所属" %></td>
+      <td>名前：<%= @user.name %>
+      </td>
+      <td>コード</td><td><%= @user.employee_number %></td>
+      <td>出勤日数<span><%= worked_on_sum %>日</span></td>
+      <td>締め<span><%= l(@first_day, format: :short) %></span></td>
+    </tr>
+  </table>
+</div>
+
+<!--上長権限-->
+<% if current_user?(@user) && current_user.superior? %>
+  <div class="notifications">
+    <table>
+      <tr>
+        <td>【所属長承認申請のお知らせ】</td>
+      </tr>
+      <tr>
+        <td>【勤怠変更申請のお知らせ】</td>
+      </tr>
+      <tr>
+        <% if @notifications.present? %>
+          <td class="text-danger">【残業申請のお知らせ】
+            <span>
+              <%= link_to "#{@notifications.count}件の通知があります", attendances_overtime_app_index_user_path(current_user), remote: true, "data-toggle" => "modal" %>
+            </span>
+          </td>
+        <% else %>
+          <td>【残業申請のお知らせ】</td>
+        <% end %>
+      </tr>
+    </table>
+  </div>
+
+<button class="btn btn-md btn-primary btn-edit"><%= link_to "勤怠編集", attendances_edit_one_month_user_path(date: @first_day) %></button>
+<button class="btn btn-md btn-primary btn-edit"><%= link_to "CSV出力", attendances_edit_one_month_user_path(date: @first_day) %></button>
+<button class="btn btn-md btn-primary btn-edit"><%= link_to "勤怠修正ログ", attendances_edit_one_month_user_path(date: @first_day) %></button>
+<button class="btn btn-md btn-default btn-select"><%= link_to "週間表示に切替", one_week_user_path(date: Date.today) %></button>
+<% end %>
+
+<div>
+  <table class="table table-bordered table-condensed table-hover attendances-table">
+    <thead>
+      <tr>
+        <th rowspan="3">残業申請</th>
+        <th rowspan="3" class="col-md-1">日付</th>
+        <th rowspan="3" class="col-md-1">曜日</th>
+        <th colspan="8">実績</th>
+        <th colspan="5">所定外勤務</th>
+      </tr>
+      <tr>
+        <th colspan="3">出社</th>
+        <th colspan="3">退社</th>
+        <th rowspan="2">在社時間</th>
+        <th rowspan="2">備考</th>
+        <th colspan="2">終了予定時間</th>
+        <th rowspan="2">時間外時間</th>
+        <th rowspan="2">業務処理内容</th>
+        <th rowspan="2">指示者確認㊞</th></th>
+      </tr>
+      <tr>
+        <th>時</th>
+        <th>分</th>
+        <th></th>
+        <th>時</th>
+        <th>分</th>
+        <th></th>
+        <th>時</th>
+        <th>分</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @attendances.each do |day| %>
+        <tr>
+          <td>
+            <% if current_user?(@user) %>
+              <button class="btn btn-primary"><%= link_to "残業申請", new_user_attendance_overtimenotification_path(current_user, day), remote: true, "data-toggle" => "modal" %></button></td>
+            <% end %>
+          <td><%= l(day.worked_on, format: :short) %></td>
+          <td class="<%= wday_color(day.worked_on.wday) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <td><%= l(day.started_at, format: :time_hour) if day.started_at.present? %></td>
+          <td><%= l(day.started_at.floor_to(15.minutes), format: :time_min) if day.started_at.present? %></td>
+          <td>
+            <% if text = attendance_started_at(day) %>
+              <%= link_to "#{text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary" %>
+            <% end %>
+          </td>
+          <td><%= l(day.finished_at, format: :time_hour) if day.finished_at.present? %></td>
+          <td><%= l(day.finished_at.floor_to(15.minutes), format: :time_min) if day.finished_at.present? %></td>
+          <td>
+            <% if text = attendance_finished_at(day) %>
+              <%= link_to "#{text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary" %>
+            <% end %>
+          </td>
+          <td><% if day.finished_at.present? && day.started_at.present? %>
+                <%= @str_times = working_time(day.finished_at.floor_to(15.minutes), day.started_at.floor_to(15.minutes)) %>
+              <% end %>
+          </td>
+          <td><%= day.note if day.note.present? %></td>
+          <% if applicated_notification(day) %>
+            <td><%= l(scheduled_end_time = @applicated_scheduled_end_time, format: :time_hour)  %></td>
+            <td><%= l(scheduled_end_time, format: :time_min)  %></td>
+            <td><%= applicated_overtime(scheduled_end_time, @user) %></td>
+            <td><%= @applicated_note %></td>
+          <% else %>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          <% end %>
+          
+          <td><%= set_status(day) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <table class="table table-bordered table-condensed total-table">
+      <tr>
+        <td class="col-md-1">累計</td>
+        <td class="col-md-3">日数：<span><%= l(@last_day, format: :short_day) %>日</span></td>
+        <td class="col-md-4">月間勤務日数：<span><%= worked_on_sum %>日</span></td>
+        <td>月間在社時間：<span><%= total_working_time(@str_times) %></span></td>
+      </tr>
+  </table>
+</div>
+
+<div id="user-modal" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+</div>
+
+<div id="superior-modal" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+</div>

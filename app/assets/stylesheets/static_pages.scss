@@ -1,0 +1,27 @@
+// Place all the styles related to the StaticPages controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.jumbotron {
+  margin-top: 80px;
+  text-align: center;
+  p {
+    padding-top: 10px;
+    font-size: 16px;  
+  }
+}
+
+.btn-format {
+  a {
+    color: white;
+  }
+}
+
+.sp-btn {
+  text-align: center;
+  a {
+    text-decoration: none;
+    color: white;
+  }
+}
