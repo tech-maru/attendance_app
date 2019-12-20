@@ -42,7 +42,11 @@
         <td>【所属長承認申請のお知らせ】</td>
       </tr>
       <tr>
-        <td>【勤怠変更申請のお知らせ】</td>
+        <td>【勤怠変更申請のお知らせ】
+         <span>
+           <%= link_to "#{@notifications.count}件の通知があります", attendances_edit_app_index_user_path(current_user), remote: true, "data-toggle" => "modal" %>
+         </span>
+        </td>
       </tr>
       <tr>
         <% if @notifications.present? %>
@@ -158,4 +162,7 @@
 </div>
 
 <div id="superior-modal" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+</div>
+
+<div id="superior-modal-edit" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 </div>

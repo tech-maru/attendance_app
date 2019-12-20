@@ -1,5 +1,5 @@
-<div>  
-  <%= form_with(model: @user, url: attendances_all_update_user_path(date: @first_day), local: true, method: :patch) do |f| %>
+<div> 
+  <%= form_with(model: @user, url: attendances_editnotifications_create_user_path, local: true, method: :patch) do |f| %>
     <table class="table table-bordered table-condensed table-hover edit_one_month-table">
       <thead>
         <tr>
@@ -13,34 +13,30 @@
           <th class="col-md-2">指示者確認㊞</th>
         </tr>
       </thead>
-
-      <tbody>
-        <% @attendances.each do |day| %>
-          <%= f.fields_for "attendances[]",day do |attendance| %>
+      <% @attendances.each do |day| %>
+        <tbody>
+        <%= f.fields_for "attendances", day do |fi| %>
+          <%= fi.fields_for "editnotifications[]", @editnotification do |edit_app| %>
             <tr>
               <td><%= l(day.worked_on, format: :short) %></td>
               <td class="<%= wday_color(day.worked_on.wday) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-              <% if (Date.current < day.worked_on) %>
-                <td><%= attendance.time_select :started_at, readonly: true, class: "form-control" %></td>
-                <td><%= attendance.time_select :finished_at, readonly: true, class: "form-control" %></td>
-              <% else %>
-                <td><%= attendance.time_select :started_at, class: "form-control" %></td>
-                <td><%= attendance.time_select :finished_at, class: "form-control" %></td>
-              <% end %>
-              <td><%= f.check_box :next_day, {},checked_value = "true",unchecked_value = "false" %></td>
+              <td><%= edit_app.time_select :after_started_at, prompt:true, ignore_data:true, class: "form-control" %></td>
+              <td><%= edit_app.time_select :after_finished_at, prompt:true, ignore_data:true, class: "form-control" %></td>
+              <td><%= edit_app.check_box :next_day, {},checked_value = "true",unchecked_value = "false" %></td>
               <td>
-              <% if day.finished_at.present? && day.started_at.present? %>
-                <%= @str_times = working_time(day.finished_at, day.started_at) %>
-              <% end %>
+                <% if day.finished_at.present? && day.started_at.present? %>
+                  <%= @str_times = working_time(day.finished_at, day.started_at) %>
+                <% end %>
               </td>
-              <td><%= day.note if day.note.present? %></td>
-              <td><%= f.collection_select :visited_id, User.where(superior: true), :id, :name, {prompt: "選択してください"} %></td>
+              <td><%= edit_app.text_field :note%></td>
+              <td><%= edit_app.collection_select :visited_id, User.where(superior: true), :id, :name, {prompt: "選択してください"} %></td>
             </tr>
           <% end %>
         <% end %>
-      </tbody>
+        </tbody>
+     <% end %>
     </table>
-    
+   
     <div class="edit_btn">
       <button class="btn btn-primary"><%= link_to "キャンセル", user_path(date: @first_day) %></button>
       <%= f.submit "編集を保存する", class: "btn btn-primary" %>
