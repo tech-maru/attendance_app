@@ -16,6 +16,10 @@ module AttendancesHelper
     end
   end
   
+  def edit_attendances
+    @edit_attendances = @attendances.group_by{|item| item.id}
+  end
+  
   def working_time(finish, start)
     format("%.2f", (((finish - start) / 60) / 60.0))
   end

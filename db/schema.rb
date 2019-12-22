@@ -24,8 +24,7 @@ ActiveRecord::Schema.define(version: 20191219120055) do
   end
 
   create_table "editnotifications", force: :cascade do |t|
-    t.integer "visited_id", null: false
-    t.integer "attendance_id"
+    t.integer "visited_id"
     t.datetime "before_started_at"
     t.datetime "before_finished_at"
     t.datetime "after_started_at"
@@ -35,6 +34,7 @@ ActiveRecord::Schema.define(version: 20191219120055) do
     t.boolean "checked", default: false, null: false
     t.boolean "next_day", default: false, null: false
     t.integer "user_id"
+    t.integer "attendance_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["attendance_id"], name: "index_editnotifications_on_attendance_id"

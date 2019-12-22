@@ -1,7 +1,8 @@
 class User < ApplicationRecord
   has_many :attendances, dependent: :destroy
   has_many :overtimenotifications, inverse_of: 'visitor', through: :attendances, dependent: :destroy
-  has_many :editnotofications, dependent: :destroy
+  has_many :editnotifications, dependent: :destroy
+  accepts_nested_attributes_for :attendances
   attr_accessor :remember_token
   before_save { self.email = email.downcase }
   

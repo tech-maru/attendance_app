@@ -7,6 +7,7 @@ class UsersController < ApplicationController
   before_action :set_one_month, only: :show
   before_action :set_one_week, only: :show_one_week
   before_action :overtime_notification, only: :show
+  before_action :edit_notification, only: :show
   
   def index
     @users = User.paginate(page: params[:page]).order(:id)

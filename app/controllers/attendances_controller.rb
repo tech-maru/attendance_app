@@ -5,6 +5,7 @@ class AttendancesController < ApplicationController
   before_action :set_one_month, only: :edit_one_month
   before_action :set_one_week, only: :edit_one_week
   before_action :overtime_notification, only: :overtime_app_index
+  before_action :set_editnotification, only: :edit_one_month
   before_action :edit_notification, only: :edit_app_index
   
   UPDATE_ERROR_MSG = "登録できませんでした。再登録してください。"
@@ -39,14 +40,13 @@ class AttendancesController < ApplicationController
   end
   
   def edit_one_month
-    @editnotification = Editnotification.new
-    @attendance_group = @user.attendances.group_by{|item| item.id}
   end
   
   def edit_one_week
   end
   
   def all_update
+    debugger
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
         attendance = Attendance.find(id)

@@ -1,5 +1,5 @@
 <div> 
-  <%= form_with(model: @user, url: attendances_editnotifications_create_user_path, local: true, method: :patch) do |f| %>
+  <%= form_with(model: @user, url: attendances_edit_app_user_path(date: @first_day), local: true, method: :patch) do |f| %>
     <table class="table table-bordered table-condensed table-hover edit_one_month-table">
       <thead>
         <tr>
@@ -15,24 +15,22 @@
       </thead>
       <% @attendances.each do |day| %>
         <tbody>
-        <%= f.fields_for "attendances", day do |fi| %>
-          <%= fi.fields_for "editnotifications[]", @editnotification do |edit_app| %>
+          <%= f.fields_for "editnotification[]", @editnotification do |editapp| %>
             <tr>
               <td><%= l(day.worked_on, format: :short) %></td>
               <td class="<%= wday_color(day.worked_on.wday) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-              <td><%= edit_app.time_select :after_started_at, prompt:true, ignore_data:true, class: "form-control" %></td>
-              <td><%= edit_app.time_select :after_finished_at, prompt:true, ignore_data:true, class: "form-control" %></td>
-              <td><%= edit_app.check_box :next_day, {},checked_value = "true",unchecked_value = "false" %></td>
+              <td><%= editapp.time_select :after_started_at, include_blank: true, ignore_data:true, class: "form-control" %></td>
+              <td><%= editapp.time_select :after_finished_at, include_blank: true, ignore_data:true, class: "form-control" %></td>
+              <td><%= editapp.check_box :next_day, {},checked_value = "true",unchecked_value = "false" %></td>
               <td>
                 <% if day.finished_at.present? && day.started_at.present? %>
                   <%= @str_times = working_time(day.finished_at, day.started_at) %>
                 <% end %>
               </td>
-              <td><%= edit_app.text_field :note%></td>
-              <td><%= edit_app.collection_select :visited_id, User.where(superior: true), :id, :name, {prompt: "選択してください"} %></td>
+              <td><%= editapp.text_field :note %></td>
+              <td><%= editapp.collection_select :visited_id, User.where(superior: true), :id, :name, {include_blank: true} %></td>
             </tr>
           <% end %>
-        <% end %>
         </tbody>
      <% end %>
     </table>

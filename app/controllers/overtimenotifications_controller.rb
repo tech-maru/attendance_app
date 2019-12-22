@@ -33,7 +33,7 @@ class OvertimenotificationsController < ApplicationController
   end
   
   def overtime_update
-    all_updateupdate_notification_params.each do |id, item|
+    all_update_notification_params.each do |id, item|
       overtimenotification = Overtimenotification.find(id)
       overtimenotification.update_attributes(item)
     end

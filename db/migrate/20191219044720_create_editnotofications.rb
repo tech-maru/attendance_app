@@ -1,8 +1,7 @@
 class CreateEditnotofications < ActiveRecord::Migration[5.1]
   def change
     create_table :editnotofications do |t|
-      t.integer :visited_id, null: false
-      t.integer :attendance_id
+      t.integer :visited_id
       t.datetime :before_started_at
       t.datetime :before_finished_at
       t.datetime :after_started_at

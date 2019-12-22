@@ -4,7 +4,7 @@ module EditnotificationsHelper
   def edit_notification
     @edit_notifications = Editnotification.where(visited_id: current_user.id).where(checked: false)
     # 申請者ごとにグループ化
-    @edit_notificated_group = @edit_notifications.group_by{|item| item.visitor_id}
+    @edit_notificated_group = @edit_notifications.group_by{|item| item.user_id}
   end
   
   # 上長が承認した残業内容

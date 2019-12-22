@@ -28,12 +28,11 @@ Rails.application.routes.draw do
       get 'attendances/overtime_app_index'
       patch 'attendances/overtime_update', to: 'overtimenotifications#overtime_update'
       get 'attendances/edit_app_index'
-      post 'attendances/editnotifications/create'
+      patch 'attendances/edit_app', to: 'editnotifications#edit_app'
     end
     
     resources :attendances do
       patch 'update'
-      post 'editnotifications/create'
       resources :overtimenotifications
     end
   end

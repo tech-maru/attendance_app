@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   include SessionsHelper
   include OvertimenotificationsHelper
   include EditnotificationsHelper
+  include AttendancesHelper
   
   $days_of_the_week = %w{日 月 火 水 木 金 土}
   
@@ -48,11 +49,30 @@ class ApplicationController < ActionController::Base
     
     unless one_month.count == @attendances.count
       ActiveRecord::Base.transaction do
-        one_month.each { |day| @user.attendances.create!(worked_on: day)}
+        one_month.each do |day|
+          @user.attendances.create!(worked_on: day)
+        end
       end
       @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     end
   
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "ページ情報の取得に失敗しました、再アクセスしてください。"
+    redirect_to root_url
+  end
+  
+  def set_editnotification
+    ActiveRecord::Base.transaction do
+      @attendances.each do |attendance|
+        attendance.create_editnotification(
+                                      user_id: @user.id,
+                                      attendance_id: attendance.id,
+                                      before_started_at: attendance.started_at, 
+                                      before_finished_at: attendance.finished_at,
+                                      visited_id: false
+                                      )
+      end
+    end
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "ページ情報の取得に失敗しました、再アクセスしてください。"
     redirect_to root_url

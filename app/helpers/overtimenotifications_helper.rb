@@ -2,9 +2,9 @@ module OvertimenotificationsHelper
   
   # ＠上長に対する[未確認]残業申請
   def overtime_notification
-    @notifications = Overtimenotification.where(visited_id: current_user.id).where(checked: false)
+    @overtime_notifications = Overtimenotification.where(visited_id: current_user.id).where(checked: false)
     # 申請者ごとにグループ化
-    @notificated_group = @notifications.group_by{|item| item.visitor_id}
+    @notificated_group = @overtime_notifications.group_by{|item| item.visitor_id}
   end
   
   # 上長が承認した残業内容
