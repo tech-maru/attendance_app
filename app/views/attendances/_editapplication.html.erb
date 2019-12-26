@@ -5,9 +5,12 @@
     <!-- &timesは「×ボタン」の表示-->
       <div class="modal-body over-app-area">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <%= form_with(model: @editnotification, url: "#", method: :patch, local: true) do |f| %>
+          <%= form_with(model: @editnotification, url: attendances_edit_update_user_path(current_user), method: :patch, local: true) do |f| %>
             <% @edit_notificated_group.each do |key, edit_notifications| %>
-              <h4>【<%= key %>】からの残業申請</h4>
+              
+              <% set_applicated_user(key) %>
+              <h4>【<%= @applicated_user_name %>】からの勤怠変更申請</h4>
+        
               <table class="table table-bordered over-appli-table">
                 <thead>
                   <tr>

@@ -61,12 +61,13 @@
       </tr>
     </table>
   </div>
+<% end %>
 
 <button class="btn btn-md btn-primary btn-edit"><%= link_to "勤怠編集", attendances_edit_one_month_user_path(date: @first_day) %></button>
 <button class="btn btn-md btn-primary btn-edit"><%= link_to "CSV出力", attendances_edit_one_month_user_path(date: @first_day) %></button>
 <button class="btn btn-md btn-primary btn-edit"><%= link_to "勤怠修正ログ", attendances_edit_one_month_user_path(date: @first_day) %></button>
 <button class="btn btn-md btn-default btn-select"><%= link_to "週間表示に切替", one_week_user_path(date: Date.today) %></button>
-<% end %>
+
 
 <div>
   <table class="table table-bordered table-condensed table-hover attendances-table">
@@ -109,25 +110,48 @@
             <% end %>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= wday_color(day.worked_on.wday) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-          <td><%= l(day.started_at, format: :time_hour) if day.started_at.present? %></td>
-          <td><%= l(day.started_at.floor_to(15.minutes), format: :time_min) if day.started_at.present? %></td>
+          <% if day.editnotification.checked == true %>
+            <td><%= l(day.editnotification.after_started_at, format: :time_hour) %></td>
+            <td><%= l(day.editnotification.after_started_at.floor_to(15.minutes), format: :time_min) %></td>
+          <% elsif day.started_at.present? %>
+            <td><%= l(day.started_at, format: :time_hour) %></td>
+            <td><%= l(day.started_at.floor_to(15.minutes), format: :time_min) %></td>
+          <% else%>
+            <td></td>
+            <td></td>
+          <% end %>  
           <td>
             <% if text = attendance_started_at(day) %>
               <%= link_to "#{text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary" %>
             <% end %>
           </td>
-          <td><%= l(day.finished_at, format: :time_hour) if day.finished_at.present? %></td>
-          <td><%= l(day.finished_at.floor_to(15.minutes), format: :time_min) if day.finished_at.present? %></td>
+          <% if day.editnotification.checked == true %>
+            <td><%= l(day.editnotification.after_finished_at, format: :time_hour) %></td>
+            <td><%= l(day.editnotification.after_finished_at.floor_to(15.minutes), format: :time_min) %></td>
+          <% elsif day.finished_at.present? %>
+            <td><%= l(day.finished_at, format: :time_hour) %></td>
+            <td><%= l(day.finished_at.floor_to(15.minutes), format: :time_min) %></td>
+          <% else %>
+            <td></td>
+            <td></td>
+          <% end %>
           <td>
             <% if text = attendance_finished_at(day) %>
               <%= link_to "#{text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary" %>
             <% end %>
           </td>
-          <td><% if day.finished_at.present? && day.started_at.present? %>
+          <td>
+            <% if day.editnotification.checked == true %>
+              <% @str_times = working_time(day.editnotification.after_finished_at.floor_to(15.minutes),day.editnotification.after_started_at.floor_to(15.minutes)) %>
+            <% elsif day.finished_at.present? && day.started_at.present? %>
                 <%= @str_times = working_time(day.finished_at.floor_to(15.minutes), day.started_at.floor_to(15.minutes)) %>
-              <% end %>
+            <% end %>
           </td>
-          <td><%= day.note if day.note.present? %></td>
+          <% if day.editnotification.checked == true %>
+            <td><%= day.editnotification.note if day.editnotification.note.present? %></td>
+          <% else %>
+            <td></td>
+          <% end %>
           <% if applicated_notification(day) %>
             <td><%= l(scheduled_end_time = @applicated_scheduled_end_time, format: :time_hour)  %></td>
             <td><%= l(scheduled_end_time, format: :time_min)  %></td>
@@ -139,8 +163,11 @@
             <td></td>
             <td></td>
           <% end %>
-          
-          <td><%= set_status(day) %></td>
+          <td>
+            <%= set_overtime_status(day) %>
+            <% if set_overtime_status(day) %><br><% end %>
+            <%= set_edit_status(day) %>
+          </td>
         </tr>
       <% end %>
     </tbody>

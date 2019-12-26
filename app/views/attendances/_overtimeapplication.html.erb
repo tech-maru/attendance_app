@@ -35,7 +35,7 @@
                         <td><%= l(@applicated_user_designated_end_time, format: :time) %></td>
                         <td><%= overtime(applicated_notification, @applicated_user) %></td>
                         <td><%= applicated_notification.note %></td>
-                        <td><%= fi.select :status, ["", "waiting", "applicate", "denial"], {prompt: "申請中"} %></td>
+                        <td><%= fi.select :status, ["", "waiting", "applicate", "denial"] %></td>
                         <td><%= fi.check_box :checked, {}, checked_value = "true",unchecked_value = "false" %></td>
                         <td><%= link_to "確認", user_path(@applicated_user, date:@applicated_worked_on.beginning_of_month), class: "btn btn-primary" %></td>
                     </tr>

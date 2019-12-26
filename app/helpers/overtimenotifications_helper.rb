@@ -28,7 +28,7 @@ module OvertimenotificationsHelper
     @applicated_worked_on = @applicated_attendance.worked_on
   end
   
-  def set_status(attendance)
+  def set_overtime_status(attendance)
     if applicate_overtimenotification = Overtimenotification.find_by(attendance_id: attendance.id)
       applicate_status = applicate_overtimenotification.status
       if applicate_status == "applicate"

@@ -40,13 +40,15 @@ class AttendancesController < ApplicationController
   end
   
   def edit_one_month
+    @attendances.each do |attendance|
+      @editnotification = Editnotification.find_by(attendance_id: attendance.id)
+    end
   end
   
   def edit_one_week
   end
   
   def all_update
-    debugger
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
         attendance = Attendance.find(id)

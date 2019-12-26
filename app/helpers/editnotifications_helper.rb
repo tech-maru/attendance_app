@@ -20,4 +20,24 @@ module EditnotificationsHelper
     end
   end
   
+  def waiting_status(editnotificaiton)
+    if editnotificaiton.visited_id != nil
+      editnotificaiton.update(status: "waiting")
+    end
+  end
+  
+  def set_edit_status(attendance)
+    applicate_editnotifications = Editnotification.where.not(status: "")
+    if applicate_editnotification = applicate_editnotifications.find_by(attendance_id: attendance.id)
+      applicate_edit_status = applicate_editnotification.status
+      if applicate_edit_status == "applicate"
+        @applicate_status = "勤怠編集承認済"
+      elsif applicate_edit_status == "denial"
+        @applicate_status = "勤怠編集否認"
+      else
+        @applicate_status = "勤怠編集申請中"
+      end
+    end
+  end
+  
 end

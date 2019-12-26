@@ -15,7 +15,7 @@
       </thead>
       <% @attendances.each do |day| %>
         <tbody>
-          <%= f.fields_for "editnotification[]", @editnotification do |editapp| %>
+          <%= f.fields_for "editnotification[]", day.editnotification do |editapp| %>
             <tr>
               <td><%= l(day.worked_on, format: :short) %></td>
               <td class="<%= wday_color(day.worked_on.wday) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
