@@ -1,0 +1,18 @@
+<%= provide(:title, "create_base") %>
+
+<h2>拠点の作成・追加</h2>
+<%= form_with(model: @base, url: bases_path, local: true) do |f| %>
+<div class="form_container">
+  <div class="form-group col-md-6 col-md-offset-3 ">
+    <%= f.label :name, "拠点名" %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+  <div class="form-group col-md-6 col-md-offset-3">
+    <%= f.label :content, "拠点種類" %>
+    <%= f.text_field :content, class: "form-control" %>
+  </div>
+  <div class="form-group col-md-6 col-md-offset-3">
+  <%= f.submit "登録", class: "col-md-12 btn btn-primary" %>
+  </div>
+<% end %>
+</div>

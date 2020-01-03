@@ -28,7 +28,7 @@
                 <% end %>
               </td>
               <td><%= editapp.text_field :note %></td>
-              <td><%= editapp.collection_select :visited_id, User.where(superior: true), :id, :name, {include_blank: true} %></td>
+              <td><%= editapp.collection_select :visited_id, User.where(superior: true).User.where(superior: true).where.not(id: current_user), :id, :name, {include_blank: true} %></td>
             </tr>
           <% end %>
         </tbody>
@@ -37,7 +37,7 @@
    
     <div class="edit_btn">
       <button class="btn btn-primary"><%= link_to "キャンセル", user_path(date: @first_day) %></button>
-      <%= f.submit "編集を保存する", class: "btn btn-primary" %>
+      <%= f.submit "編集を申請する", class: "btn btn-primary" %>
     </div>
   <% end %>
 </div>

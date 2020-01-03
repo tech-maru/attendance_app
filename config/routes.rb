@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get '/test_superior', to: 'sessions#superior_user'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
+  resources :bases
   
   resources :users do
     collection { post :import}
@@ -23,13 +24,18 @@ Rails.application.routes.draw do
       get 'edit_basic_info'
       patch 'update_basic_info'
       get 'attendances/edit_one_month'
-      get 'attendances/edit_one_week'
       patch 'attendances/all_update'
       get 'attendances/overtime_app_index'
       patch 'attendances/overtime_update', to: 'overtimenotifications#overtime_update'
       get 'attendances/edit_app_index'
       patch 'attendances/edit_app', to: 'editnotifications#edit_app'
       patch 'attendances/edit_update', to: 'editnotifications#edit_update'
+      get 'attendances/past_log', to: 'attendances#past_log' 
+      post 'attendances/past_log', to: 'attendances#past_log'
+      post 'attendances/applicate', to: 'attendancenotifications#new'
+      get 'attendances/applicated', to: 'attendancenotifications#index'
+      patch 'attendances/applicated', to: 'attendancenotifications#update'
+      get 'attendances/output'
     end
     
     resources :attendances do

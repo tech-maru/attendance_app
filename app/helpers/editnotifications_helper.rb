@@ -20,9 +20,18 @@ module EditnotificationsHelper
     end
   end
   
+  # 申請先ユーザーの名前
+  def edit_visited_user(attendance)
+    if attendance.editnotification.present? && attendance.editnotification.checked != true
+      if attendance.editnotification.visited_id.present? && attendance.editnotification.visited_id != 0
+        @edit_visited_user = User.find(attendance.editnotification.visited_id).name
+      end
+    end
+  end
+  
   def waiting_status(editnotificaiton)
     if editnotificaiton.visited_id != nil
-      editnotificaiton.update(status: "waiting")
+      editnotificaiton.update(status: "申請中")
     end
   end
   
@@ -30,14 +39,19 @@ module EditnotificationsHelper
     applicate_editnotifications = Editnotification.where.not(status: "")
     if applicate_editnotification = applicate_editnotifications.find_by(attendance_id: attendance.id)
       applicate_edit_status = applicate_editnotification.status
-      if applicate_edit_status == "applicate"
+      if applicate_edit_status == "承認"
         @applicate_status = "勤怠編集承認済"
-      elsif applicate_edit_status == "denial"
+      elsif applicate_edit_status == "否認"
         @applicate_status = "勤怠編集否認"
       else
         @applicate_status = "勤怠編集申請中"
       end
     end
   end
+  
+  def app_editapp_user(user_id)
+    @visitor_user = User.find(user_id).name
+  end
+    
   
 end

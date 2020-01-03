@@ -5,15 +5,17 @@ class EditnotificationsController < ApplicationController
   def edit_app
     ActiveRecord::Base.transaction do
       editnotification_params.each do |id, edit_params|
-        editnotificaiton = Editnotification.find(id)
-        editnotificaiton.update_attributes!(edit_params)
-        waiting_status(editnotificaiton)
+        if edit_params[:visited_id].to_i >= 1
+          editnotificaiton = Editnotification.find(id)
+          editnotificaiton.update_attributes!(edit_params)
+          waiting_status(editnotificaiton)
+        end
       end
     end
     flash[:success] = "勤怠情報の変更申請をしました。"
     redirect_to user_url(date: params[:date].to_date.beginning_of_month)
   rescue ActiveRecord::RecordInvalid
-    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
+    flash[:danger] = "無効な入力データがあった為、申請をキャンセルしました。"
     redirect_to attendances_edit_one_month_user_url(date: params[:date].to_date.beginning_of_month)
   end
   

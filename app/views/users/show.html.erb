@@ -39,14 +39,26 @@
   <div class="notifications">
     <table>
       <tr>
+        <% if @attendance_notifications.present? %>
+          <td class="text-danger">【所属長承認申請のお知らせ】
+             <span>
+               <%= link_to "#{@attendance_notifications.count}件の通知があります", attendances_applicated_user_path(current_user), remote: true, "data-toggle" => "modal" %>
+             </span>
+          </td>
+        <% else %>
         <td>【所属長承認申請のお知らせ】</td>
+        <% end %>
       </tr>
       <tr>
-        <td>【勤怠変更申請のお知らせ】
-         <span>
-           <%= link_to "#{@edit_notifications.count}件の通知があります", attendances_edit_app_index_user_path(current_user), remote: true, "data-toggle" => "modal" %>
-         </span>
-        </td>
+        <% if @edit_notifications.present? %>
+          <td class="text-danger">【勤怠変更申請のお知らせ】
+             <span>
+               <%= link_to "#{@edit_notifications.count}件の通知があります", attendances_edit_app_index_user_path(current_user), remote: true, "data-toggle" => "modal" %>
+             </span>
+          </td>
+        <% else %>
+          <td>【勤怠変更申請のお知らせ】</td>
+        <% end %>
       </tr>
       <tr>
         <% if @overtime_notifications.present? %>
@@ -63,11 +75,12 @@
   </div>
 <% end %>
 
+<!--各種お知らせ通知-->
+<% if current_user?(@user) || current_user.admin? %>
 <button class="btn btn-md btn-primary btn-edit"><%= link_to "勤怠編集", attendances_edit_one_month_user_path(date: @first_day) %></button>
-<button class="btn btn-md btn-primary btn-edit"><%= link_to "CSV出力", attendances_edit_one_month_user_path(date: @first_day) %></button>
-<button class="btn btn-md btn-primary btn-edit"><%= link_to "勤怠修正ログ", attendances_edit_one_month_user_path(date: @first_day) %></button>
-<button class="btn btn-md btn-default btn-select"><%= link_to "週間表示に切替", one_week_user_path(date: Date.today) %></button>
-
+<button class="btn btn-md btn-primary btn-edit"><%= link_to "CSV出力", attendances_output_user_path(date: @first_day, format: :csv) %></button>
+<button class="btn btn-md btn-primary btn-edit" data-toggle="modal" data-target="#pastlog-modal">勤怠ログ</button>
+<% end %>
 
 <div>
   <table class="table table-bordered table-condensed table-hover attendances-table">
@@ -110,7 +123,7 @@
             <% end %>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= wday_color(day.worked_on.wday) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-          <% if day.editnotification.checked == true %>
+          <% if day.editnotification && day.editnotification.status == "承認" %>
             <td><%= l(day.editnotification.after_started_at, format: :time_hour) %></td>
             <td><%= l(day.editnotification.after_started_at.floor_to(15.minutes), format: :time_min) %></td>
           <% elsif day.started_at.present? %>
@@ -121,11 +134,13 @@
             <td></td>
           <% end %>  
           <td>
-            <% if text = attendance_started_at(day) %>
-              <%= link_to "#{text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary" %>
+            <% if current_user?(@user) || current_user.admin? %>
+              <% if text = attendance_started_at(day) %>
+                <%= link_to "#{text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary" %>
+              <% end %>
             <% end %>
           </td>
-          <% if day.editnotification.checked == true %>
+          <% if day.editnotification && day.editnotification.status == "承認" %>
             <td><%= l(day.editnotification.after_finished_at, format: :time_hour) %></td>
             <td><%= l(day.editnotification.after_finished_at.floor_to(15.minutes), format: :time_min) %></td>
           <% elsif day.finished_at.present? %>
@@ -136,36 +151,45 @@
             <td></td>
           <% end %>
           <td>
-            <% if text = attendance_finished_at(day) %>
-              <%= link_to "#{text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary" %>
+            <% if current_user?(@user) || current_user.admin? %>
+              <% if text = attendance_finished_at(day) %>
+                <%= link_to "#{text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-primary" %>
+              <% end %>
             <% end %>
           </td>
           <td>
-            <% if day.editnotification.checked == true %>
+            <% if day.editnotification && day.editnotification.status == "承認" %>
               <% @str_times = working_time(day.editnotification.after_finished_at.floor_to(15.minutes),day.editnotification.after_started_at.floor_to(15.minutes)) %>
             <% elsif day.finished_at.present? && day.started_at.present? %>
                 <%= @str_times = working_time(day.finished_at.floor_to(15.minutes), day.started_at.floor_to(15.minutes)) %>
             <% end %>
           </td>
-          <% if day.editnotification.checked == true %>
-            <td><%= day.editnotification.note if day.editnotification.note.present? %></td>
-          <% else %>
-            <td></td>
-          <% end %>
-          <% if applicated_notification(day) %>
-            <td><%= l(scheduled_end_time = @applicated_scheduled_end_time, format: :time_hour)  %></td>
-            <td><%= l(scheduled_end_time, format: :time_min)  %></td>
-            <td><%= applicated_overtime(scheduled_end_time, @user) %></td>
-            <td><%= @applicated_note %></td>
-          <% else %>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          <% end %>
+            <% if day.editnotification && day.editnotification.status == "承認" %>
+              <td><%= day.editnotification.note if day.editnotification.note.present? %></td>
+            <% else %>
+              <td></td>
+            <% end %>
+            <% if applicated_overtime_detail(day) %>
+              <td><%= l(scheduled_end_time = @applicated_scheduled_end_time, format: :time_hour)  %></td>
+              <td><%= l(scheduled_end_time, format: :time_min)  %></td>
+              <td><%= applicated_overtime(scheduled_end_time, @user) %></td>
+              <td><%= @applicated_note %></td>
+            <% else %>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            <% end %>
           <td>
-            <%= set_overtime_status(day) %>
-            <% if set_overtime_status(day) %><br><% end %>
+            <% if over_visited_user(day) %>
+              <%= @visited_user %><br>
+            <% end %>
+            <% if set_overtime_status(day) %>
+              <%= @app_over_status %><br>
+            <% end %>
+            <% if edit_visited_user(day) %>
+              <%= @edit_visited_user %><br>
+            <% end %>
             <%= set_edit_status(day) %>
           </td>
         </tr>
@@ -181,11 +205,91 @@
         <td class="col-md-3">日数：<span><%= l(@last_day, format: :short_day) %>日</span></td>
         <td class="col-md-4">月間勤務日数：<span><%= worked_on_sum %>日</span></td>
         <td>月間在社時間：<span><%= total_working_time(@str_times) %></span></td>
+        <td class="text-danger"><%= @comment if set_attendance_applicate_status %></td>
       </tr>
   </table>
 </div>
 
+<!--１ヶ月勤怠申請フォーム-->
+<% if current_user?(@user) || current_user.admin? %>
+  <% if @text == "所属長承認未" %>
+    <div class="applicate_container">
+      <div class="month_applicate">
+        <p><%= @text %></p>
+        <%= form_with(model: @user, url: attendances_applicate_user_path, date: @first_day, local: true, method: :post) do |f| %>
+          <%= f.fields_for :attendancenotifications do |fi| %>  
+            <%= fi.collection_select :visited_id, User.where(superior: true).where.not(id: current_user), :id, :name, {prompt: "選択してください"}, class: "form-control" %>
+            <%= fi.hidden_field :date, value: @first_day %>
+          <% end %>
+          <%= f.submit "申請", class: "btn btn-primary btn-sm month_form" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+<div class="layout_correct"></div>
+
+<!--modal-->
 <div id="user-modal" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+</div>
+
+<div id="pastlog-modal" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+  <!-- モーダルコンテンツ:モーダルに表示させる内容-->
+    <div class="modal-content">
+    <!-- &timesは「×ボタン」の表示-->
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 id="hoge">勤怠ログ</h4>
+        <div class = "pastlog-form">
+          <%= form_with(url: attendances_past_log_user_path, scope: :user, remote: true, id: "date_form") do |f| %> 
+            <%= f.datetime_select :result, {start_year: 2019, discard_day: true, discard_hour: true, discard_minute: true, prompt: {year: "年", month: "月"}}, class: "form-control pastlog" %>
+            <input type="reset" value="リセット" class="form-control past_reset"/>
+          <% end %>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>日付</th>
+              <th>変更前出社時間</th>
+              <th>変更前退社時間</th>
+              <th>変更後出社</th>
+              <th>変更後退社</th>
+              <th>指示者</th>
+              <th>承認日</th>
+            </tr>
+          </thead>
+          <tbody id="result_edit">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+$(function(){
+  $("#user_result_2i").change(function(){
+    Rails.fire($("#date_form")[0], "submit");
+  });
+});
+
+$(function(){
+  $(".past_reset").on("click", function(){
+    clearform(this.form);
+    $("#result_edit").hide();
+  });
+   
+  function clearform (form) {
+    $(form)
+      .find("select")
+      .val("")
+      .prop("selected", false)
+    ;
+  }
+  
+});
+</script>
+<div id="superior-modal-month" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 </div>
 
 <div id="superior-modal" class="modal fade" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

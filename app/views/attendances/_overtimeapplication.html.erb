@@ -3,14 +3,14 @@
   <!-- モーダルコンテンツ:モーダルに表示させる内容-->
   <div class="modal-content">
     <!-- &timesは「×ボタン」の表示-->
-      <div class="modal-body over-app-area">
+      <div class="modal-body modal-area">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
           <%= form_with(model: @overtimenotification, url: attendances_overtime_update_user_path(current_user), method: :patch, local: true) do |f| %>
           <% @notificated_group.each do |key, applicated_notifications| %>
             
             <% set_applicated_user(key) %>
             <h4>【<%= @applicated_user_name %>】からの残業申請</h4>
-            <table class="table table-bordered over-appli-table">
+            <table class="table table-bordered modal-table">
               <thead>
                   <tr>
                   　<th>日付</th>
@@ -35,9 +35,9 @@
                         <td><%= l(@applicated_user_designated_end_time, format: :time) %></td>
                         <td><%= overtime(applicated_notification, @applicated_user) %></td>
                         <td><%= applicated_notification.note %></td>
-                        <td><%= fi.select :status, ["", "waiting", "applicate", "denial"] %></td>
-                        <td><%= fi.check_box :checked, {}, checked_value = "true",unchecked_value = "false" %></td>
-                        <td><%= link_to "確認", user_path(@applicated_user, date:@applicated_worked_on.beginning_of_month), class: "btn btn-primary" %></td>
+                        <td><%= fi.select :status, ["", "申請中", "承認", "否認"], class: "form-control" %></td>
+                        <td><%= fi.check_box :checked, {}, checked_value = "true",unchecked_value = "false"%></td>
+                        <td><%= link_to "確認", user_path(@applicated_user, date:@applicated_worked_on.beginning_of_month), target: "_blank", class: "btn btn-primary td-btn" %></td>
                     </tr>
                   </tbody>
                   <% end %>

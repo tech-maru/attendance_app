@@ -2,15 +2,18 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :show_one_week, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :logged_in_user, only: [:show, :show_one_week, :edit, :update]
   before_action :correct_user, only:[:show, :edit]
-  before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info, :basic_info, :basic_info_update]
+  before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info, :basic_info, :basic_info_update, :going_to_work]
   before_action :today_working, only: :going_to_work
   before_action :set_one_month, only: :show
-  before_action :set_one_week, only: :show_one_week
+  before_action :attendance_notification, only: :show
   before_action :overtime_notification, only: :show
   before_action :edit_notification, only: :show
+  before_action :set_attendance_applicate, only: :show
+  before_action :set_attendance_applicate_status, only: :show
+  before_action :cannot_edit_admin_info, only: [:show, :edit, :update, :destroy]
   
   def index
-    @users = User.paginate(page: params[:page]).order(:id)
+    @users = User.where.not(id: current_user).paginate(page: params[:page]).order(:id)
   end
   
   def index_result

@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191219120055) do
+ActiveRecord::Schema.define(version: 20200103061546) do
+
+  create_table "attendancenotifications", force: :cascade do |t|
+    t.string "status"
+    t.datetime "applicate_month"
+    t.integer "visited_id"
+    t.boolean "checked"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_attendancenotifications_on_user_id"
+  end
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -21,6 +32,13 @@ ActiveRecord::Schema.define(version: 20191219120055) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_attendances_on_user_id"
+  end
+
+  create_table "bases", force: :cascade do |t|
+    t.string "name"
+    t.string "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "editnotifications", force: :cascade do |t|
@@ -42,18 +60,18 @@ ActiveRecord::Schema.define(version: 20191219120055) do
   end
 
   create_table "overtimenotifications", force: :cascade do |t|
-    t.integer "visitor_id", null: false
     t.integer "visited_id", null: false
-    t.integer "attendance_id"
     t.datetime "scheduled_end_time"
     t.string "status", default: "", null: false
     t.string "note", default: "", null: false
     t.boolean "next_day", default: false, null: false
     t.boolean "checked", default: false, null: false
+    t.integer "user_id"
+    t.integer "attendance_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["attendance_id"], name: "index_overtimenotifications_on_attendance_id", unique: true
-    t.index ["visitor_id"], name: "index_overtimenotifications_on_visitor_id"
+    t.index ["attendance_id"], name: "index_overtimenotifications_on_attendance_id"
+    t.index ["user_id"], name: "index_overtimenotifications_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|

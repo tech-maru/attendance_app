@@ -25,12 +25,12 @@
                   <td><%= f.time_select :scheduled_end_time %></td>
                   <td><%= f.check_box :next_day, {},checked_value = "true",unchecked_value = "false" %></td>
                   <td><%= f.text_field :note %></td>
-                  <td><%= f.collection_select :visited_id, User.where(superior: true), :id, :name, {prompt: "選択してください"} %>
+                  <td><%= f.collection_select :visited_id, User.where(superior: true).where.not(id: current_user), :id, :name, {prompt: "選択してください"} %>
                   </td>
                 </tr>
                 </tbody>
           </table>
-          <%= f.submit "変更を申請する", class: "btn btn-primary submit-btn" %>
+          <%= f.submit "残業申請", class: "btn btn-primary submit-btn" %>
         <% end %>
     </div>
   </div>

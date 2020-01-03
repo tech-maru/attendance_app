@@ -1,6 +1,7 @@
 class Attendance < ApplicationRecord
   belongs_to :user
   has_one :overtimenotification, dependent: :destroy
+  accepts_nested_attributes_for :overtimenotification
   has_one :editnotification, dependent: :destroy
   accepts_nested_attributes_for :editnotification
   

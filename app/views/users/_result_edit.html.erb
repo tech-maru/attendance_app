@@ -1,0 +1,14 @@
+<% @search_attendances.each do |attendance| %>
+ <% if attendance.editnotification && attendance.editnotification.status == "承認" %>
+    <tr>
+      <th><%= l(attendance.worked_on, format: :date_middle) %></th>
+      <th><%= attendance.editnotification.before_started_at %></th>
+      <th><%= attendance.editnotification.before_finished_at %></th>
+      <th><%= l(attendance.editnotification.after_started_at, format: :time) %></th>
+      <th><%= l(attendance.editnotification.after_finished_at, format: :time) %></th>
+      <% edit_visited_user(attendance) %>
+        <th><%= @edit_visited_user %></th>
+      <th><%= l(attendance.editnotification.updated_at, format: :middle) %></th>
+    </tr>
+  <% end %>
+<% end %>

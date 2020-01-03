@@ -1,0 +1,29 @@
+<%= provide(:title, "base_index") %>
+
+<h2>拠点一覧</h2>
+<table class="table table-bordered base_index">
+  <thead>
+    <tr>
+      <th></th>
+      <th></th>
+      <th>拠点番号</th>
+      <th>拠点名</th>
+      <th>拠点種類</th>
+    </tr>
+   </thead>
+   <tbody>
+     <% @bases.each do |base| %>
+       <tr>
+        <td><button class="btn btn-primary"><%= link_to '修正', edit_basis_path(base) %></button></td>
+        <td><button class="btn btn-primary"><%= link_to '削除', basis_path(base), method: :delete, data: { confirm: "#{base.name}を削除してよろしいですか？" } %></button></td>
+        <td><p><%= base.id %></p></td>
+        <td><p><%= base.name %></p></td>
+        <td><p><%= base.content %></p></td>
+      </tr>
+    <% end %>
+   </tbody>
+</table>
+
+<div class="add_base_btn">
+  <button class="btn btn-primary"><%= link_to '拠点情報追加', new_basis_path %></button>
+</div>

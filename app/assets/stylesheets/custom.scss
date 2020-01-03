@@ -64,3 +64,28 @@ h2 {
     color: #a94442;
   }
 }
+
+/*承認モーダル共通*/
+
+.modal-area {
+  h4 {
+    margin-bottom: 0!important;
+  }
+}
+
+.modal-table {
+  margin-top: 0!important;
+  margin-bottom: 30px!important;
+  th { 
+    text-align: center;
+    vertical-align: middle!important;
+  }
+  td {
+    padding: 5px!important;
+    text-align: center;
+    vertical-align: middle!important;
+    .td-btn {
+      margin: 0!important;
+    }
+  }
+}

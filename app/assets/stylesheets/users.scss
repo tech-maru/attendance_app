@@ -49,6 +49,7 @@
 }
 
 .index-area {
+  margin-top: 20px;
   span{
   margin: auto 8px auto auto;
   }
@@ -108,9 +109,12 @@ span {
 
 .notifications {
   margin-bottom: 20px;
+  td {
+    padding: 3px;
+  }
   span {
     font-size: larger;
-    border: solid 3px #A94442;
+    border: solid 2px #A94442;
     margin: auto 10px;
     a {
       color: #A94442;
@@ -131,16 +135,31 @@ span {
   }
 }
 
-.btn-select {
-  float: right;
-  a {
-  color: #333;
+.total-table {
+  background-color: #EEE!important;
+  text-align: center;
+  td {
+    vertical-align: middle!important;
   }
 }
 
-.total-table {
-  background-color: #d0d0d0!important;
-  text-align: center;
+.applicate_container {
+  float: right;
+  margin-bottom: 5px;
+  .month_applicate {
+    text-align: center;
+    border: solid 1px #777;
+    padding: 5px;
+    .month_form {
+      display: block;
+      margin-top: 10px;
+      width: 140px;
+    }
+  }
+}
+
+.layout_correct {
+   clear: both;
 }
 
 
@@ -151,5 +170,23 @@ span {
 
 .modal-body {
   text-align: center;
+}
+
+/* pastlog-modal */
+
+.pastlog-form {
+  text-align: left;
+  margin-bottom: 5px;
+  .pastlog {
+    display: inline-block;
+    width: auto;
+    float: left;
+    margin-right:5px;
+  }
+}
+
+.past_reset {
+  display: inline-block;
+  width: auto;
 }
 

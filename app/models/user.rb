@@ -1,11 +1,10 @@
 class User < ApplicationRecord
   has_many :attendances, dependent: :destroy
-  has_many :overtimenotifications, inverse_of: 'visitor', through: :attendances, dependent: :destroy
+  has_many :overtimenotifications, dependent: :destroy
   has_many :editnotifications, dependent: :destroy
-  accepts_nested_attributes_for :attendances
+  has_many :attendancenotifications, dependent: :destroy
   attr_accessor :remember_token
   before_save { self.email = email.downcase }
-  
   validates :name, presence: true, length: { maximum: 50 }
   
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i

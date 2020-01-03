@@ -1,0 +1,39 @@
+<!-- モーダルの適切な幅とマージンを設定 -->
+<div class="modal-dialog">
+  <!-- モーダルコンテンツ:モーダルに表示させる内容-->
+  <div class="modal-content">
+    <!-- &timesは「×ボタン」の表示-->
+      <div class="modal-body modal-area">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <%= form_with(model: @attendancenotification, url: attendances_applicated_user_path(current_user), method: :patch, local: true) do |f| %>
+            <% @attendance_notificated_group.each do |key, applicated_notifications| %>
+              <% set_visitor_user(key) %>
+            <h4>【<%= @attendance_app_user %>】からの１ヶ月分勤怠申請</h4>
+            <table class="table table-bordered modal-table">
+              <thead>
+                  <tr>
+                  　<th>月</th>
+                    <th>指示者確認㊞</th>
+                    <th>変更</th>
+                    <th>勤怠を確認する</th>
+                  </tr>
+              </thead>
+              <% applicated_notifications.each do |applicated_notification| %>
+                 <%= f.fields_for "attendancenotifications[]", applicated_notification do |fi| %>
+                  <tbody>
+                    <tr>
+                        <td><%= l(applicated_notification.applicate_month, format: :month) %></td>
+                        <td><%= fi.select :status, ["", "申請中", "承認", "否認"] %></td>
+                        <td><%= fi.check_box :checked, {}, checked_value = "true",unchecked_value = "false" %></td>
+                        <td><%= link_to "確認", user_path(key, date: applicated_notification.applicate_month), target: "_blank", class: "btn btn-primary td-btn" %></td>
+                    </tr>
+                  </tbody>
+                  <% end %>
+              <% end %> 
+            </table>
+          <% end %>
+          <%= f.submit "変更を送信する", class: "btn btn-primary" %>
+        <% end %>
+    </div>
+  </div>
+</div>                                    

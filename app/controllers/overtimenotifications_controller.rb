@@ -3,17 +3,15 @@ class OvertimenotificationsController < ApplicationController
   before_action :overtime_notification, only: :update
   
   def new
-    @user = User.find_by(id: params[:user_id])
-    @overtimenotification = Overtimenotification.new
+    @overtimenotification = @user.overtimenotifications.new
   end
   
   def create
-    temp = current_user.overtimenotifications.where(attendance_id: params[:attendance_id])
+    temp = Overtimenotification.find_by(attendance_id: params[:attendance_id])
     if temp.blank?
-      @overtimenotification = current_user.overtimenotifications.new(overtimenotification_params)
-      @overtimenotification.visitor_id = params[:user_id]
-      @overtimenotification.attendance_id = params[:attendance_id]
+      @overtimenotification = @user.overtimenotifications.new(overtimenotification_params)
       @overtimenotification.status = "waiting"
+      @overtimenotification.attendance_id = params[:attendance_id]
       if @overtimenotification.save
         redirect_to user_url(current_user)
       else
@@ -42,11 +40,12 @@ class OvertimenotificationsController < ApplicationController
   
   private
     def set_attendance
+      @user = User.find_by(id: params[:user_id])
       @attendance = Attendance.find_by(id: params[:attendance_id])
     end
     
     def overtimenotification_params
-      params.require(:overtimenotification).permit(:visited_id, :note, :status, :next_day, :cheked, :scheduled_end_time)
+      params.require(:overtimenotification).permit(:visited_id, :note, :next_day, :scheduled_end_time)
     end
     
     def update_params

@@ -1,9 +1,8 @@
 class AttendancesController < ApplicationController
-  before_action :set_user, only: [:edit_one_month, :edit_one_week, :all_update]
+  before_action :set_user, only: [:edit_one_month, :edit_one_week, :all_update, :past_log, :output]
   before_action :logged_in_user, only: [:update, :overtime, :edit_one_month, :edit_one_week]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month, :edit_one_week, :all_update]
-  before_action :set_one_month, only: :edit_one_month
-  before_action :set_one_week, only: :edit_one_week
+  before_action :set_one_month, only: [:edit_one_month, :output]
   before_action :overtime_notification, only: :overtime_app_index
   before_action :set_editnotification, only: :edit_one_month
   before_action :edit_notification, only: :edit_app_index
@@ -45,9 +44,6 @@ class AttendancesController < ApplicationController
     end
   end
   
-  def edit_one_week
-  end
-  
   def all_update
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
@@ -68,6 +64,20 @@ class AttendancesController < ApplicationController
   def edit_app_index
   end
   
+  def past_log
+    if params[:user].present? 
+      first_day = Time.zone.local(params[:user]["result(1i)"].to_i, params[:user]["result(2i)"].to_i).beginning_of_month
+      last_day = first_day.end_of_month
+      @search_attendances = Attendance.where(worked_on: first_day..last_day)
+      respond_to do |format|
+        format.any
+        format.js
+      end
+    else
+      @search_attendances = @user.attendances.all
+    end
+  end
+  
   private
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
@@ -78,6 +88,15 @@ class AttendancesController < ApplicationController
       unless current_user?(@user) || current_user.admin?
        flash[:danger] = "アクセスできません。"
        redirect_to root_url
+      end
+    end
+    
+    def output
+      respond_to do |format|
+        format.html do
+        end 
+        format.csv do
+        end
       end
     end
 end

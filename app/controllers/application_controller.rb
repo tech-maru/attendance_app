@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   include OvertimenotificationsHelper
   include EditnotificationsHelper
   include AttendancesHelper
+  include AttendancenotificationsHelper
   
   $days_of_the_week = %w{日 月 火 水 木 金 土}
   
@@ -17,7 +18,8 @@ class ApplicationController < ActionController::Base
       redirect_to login_url
     end
   end
-    
+
+# ページの閲覧権限
   def correct_user
     unless current_user?(@user) || current_user.admin? || current_user.superior?
       flash[:danger] = "不正なログインです。"
@@ -31,6 +33,17 @@ class ApplicationController < ActionController::Base
       redirect_to root_url
     end
   end
+  
+  def cannot_edit_admin_info
+    @admin_users = User.where(admin: true)
+    @admin_users.each do |user|
+      if user.id == @user.id
+        flash[:danger] = "アクセスできません"
+        redirect_to root_url
+      end
+    end
+  end
+    
   
   def today_working
     @attendances = Attendance.where(worked_on: Date.current, finished_at: nil)
@@ -64,13 +77,17 @@ class ApplicationController < ActionController::Base
   def set_editnotification
     ActiveRecord::Base.transaction do
       @attendances.each do |attendance|
-        attendance.create_editnotification(
+        if attendance.editnotification.blank?
+          attendance.create_editnotification(
                                       user_id: @user.id,
                                       attendance_id: attendance.id,
                                       before_started_at: attendance.started_at, 
                                       before_finished_at: attendance.finished_at,
-                                      visited_id: false
+                                      visited_id: false,
+                                      checked: false,
+                                      status: ""
                                       )
+        end
       end
     end
   rescue ActiveRecord::RecordInvalid
