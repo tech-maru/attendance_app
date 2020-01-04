@@ -2,7 +2,7 @@ module AttendancenotificationsHelper
 
 # 申請された月勤怠インスタンス
   def set_attendance_applicate
-    @app_attendance = Attendancenotification.find_by(applicate_month: @first_day.to_datetime)
+    @app_attendance = @user.attendancenotifications.find_by(applicate_month: @first_day.to_datetime)
   end
 
 # 申請状況
