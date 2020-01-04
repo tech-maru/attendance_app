@@ -53,4 +53,8 @@ module EditnotificationsHelper
     @visitor_user = User.find(user_id).name
   end
   
+  def applicated_edit_overtime(after_finished_at, user)
+    format("%.2f", applicated_overtime = (((after_finished_at.floor_to(15.minutes).to_f - user.designated_work_end_time.to_f) / 60) / 60.0 ))
+  end
+  
 end

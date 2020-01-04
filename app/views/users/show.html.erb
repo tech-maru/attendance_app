@@ -123,10 +123,8 @@
             <% end %>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= wday_color(day.worked_on.wday) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-          <% if day.editnotification && day.editnotification.status == "承認" %>
-            <td><%= l(day.editnotification.after_started_at, format: :time_hour) %></td>
-            <td><%= l(day.editnotification.after_started_at.floor_to(15.minutes), format: :time_min) %></td>
-          <% elsif day.started_at.present? %>
+          <!--出社時間の場合分け-->
+          <% if day.started_at.present? %>
             <td><%= l(day.started_at, format: :time_hour) %></td>
             <td><%= l(day.started_at.floor_to(15.minutes), format: :time_min) %></td>
           <% else%>
@@ -140,10 +138,8 @@
               <% end %>
             <% end %>
           </td>
-          <% if day.editnotification && day.editnotification.status == "承認" %>
-            <td><%= l(day.editnotification.after_finished_at, format: :time_hour) %></td>
-            <td><%= l(day.editnotification.after_finished_at.floor_to(15.minutes), format: :time_min) %></td>
-          <% elsif day.finished_at.present? %>
+          <!--退社時間の場合分け-->
+          <% if day.finished_at.present? %>
             <td><%= l(day.finished_at, format: :time_hour) %></td>
             <td><%= l(day.finished_at.floor_to(15.minutes), format: :time_min) %></td>
           <% else %>
@@ -157,29 +153,31 @@
               <% end %>
             <% end %>
           </td>
-          <td>
-            <% if day.editnotification && day.editnotification.status == "承認" %>
-              <% @str_times = working_time(day.editnotification.after_finished_at.floor_to(15.minutes),day.editnotification.after_started_at.floor_to(15.minutes)) %>
-            <% elsif day.finished_at.present? && day.started_at.present? %>
-                <%= @str_times = working_time(day.finished_at.floor_to(15.minutes), day.started_at.floor_to(15.minutes)) %>
-            <% end %>
-          </td>
-            <% if day.editnotification && day.editnotification.status == "承認" %>
-              <td><%= day.editnotification.note if day.editnotification.note.present? %></td>
-            <% else %>
-              <td></td>
-            <% end %>
-            <% if applicated_overtime_detail(day) %>
-              <td><%= l(scheduled_end_time = @applicated_scheduled_end_time, format: :time_hour)  %></td>
-              <td><%= l(scheduled_end_time, format: :time_min)  %></td>
-              <td><%= applicated_overtime(scheduled_end_time, @user) %></td>
-              <td><%= @applicated_note %></td>
-            <% else %>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            <% end %>
+          <!--在社時間場合分け-->
+          <% if day.finished_at.present? && day.started_at.present? %>
+            <td>
+              <%= @str_times = working_time(day.finished_at.floor_to(15.minutes), day.started_at.floor_to(15.minutes)) %>
+            </td>
+          <% else %>
+            <td></td>
+          <% end %>
+          <td></td>
+          <!--終了予定時間-->
+          <% if applicated_overtime_detail(day) %>
+            <td><%= l(scheduled_end_time = @applicated_scheduled_end_time, format: :time_hour)  %></td>
+            <td><%= l(scheduled_end_time, format: :time_min)  %></td>
+          <% else %>
+            <td></td>
+            <td></td>
+          <% end %>
+          <!--時間外時間-->
+          <% if applicated_overtime_detail(day) %>
+            <td><%= applicated_overtime(scheduled_end_time, @user) %></td>
+            <td><%= @applicated_note %></td>
+          <% else %>
+            <td><%= applicated_edit_overtime(day.finished_at, @user) if day.started_at.present? && day.finished_at.present? %></td>
+            <td></td>
+          <% end %>
           <td>
             <% if over_visited_user(day) %>
               <%= @visited_user %><br>

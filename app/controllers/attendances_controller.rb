@@ -44,18 +44,16 @@ class AttendancesController < ApplicationController
     end
   end
   
-  def all_update
-    ActiveRecord::Base.transaction do
-      attendances_params.each do |id, item|
-        attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
+  def edit_update
+    edit_update_params.each do |id, item|
+      if item[:checked] == "true"
+        edit_notification = Editnotification.find_by(id: id)
+        edit_notification.update_attributes(item)
+        attendance = Attendance.find_by(id: edit_notification.attendance_id)
+        attendance.update_attributes(started_at: edit_notification.after_started_at, finished_at: edit_notification.after_finished_at)
       end
     end
-    flash[:success] = "勤怠情報を更新しました。"
-    redirect_to user_url(date: params[:date].to_date.beginning_of_month)
-  rescue ActiveRecord::RecordInvalid
-    flash[:danger] = "無効な入力データがあった為、更新をキャンセルしました。"
-    redirect_to attendances_edit_one_month_user_url(date: params[:date].to_date.beginning_of_month)
+     redirect_to user_url(current_user)
   end
   
   def overtime_app_index
@@ -78,6 +76,15 @@ class AttendancesController < ApplicationController
     end
   end
   
+  def output
+    respond_to do |format|
+      format.html do
+      end 
+      format.csv do
+      end
+    end
+  end
+  
   private
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
@@ -91,12 +98,7 @@ class AttendancesController < ApplicationController
       end
     end
     
-    def output
-      respond_to do |format|
-        format.html do
-        end 
-        format.csv do
-        end
-      end
+    def edit_update_params
+      params.permit(editnotification: [:status, :checked])[:editnotification]
     end
 end
