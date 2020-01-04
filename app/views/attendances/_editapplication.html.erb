@@ -3,7 +3,7 @@
   <!-- モーダルコンテンツ:モーダルに表示させる内容-->
   <div class="modal-content">
     <!-- &timesは「×ボタン」の表示-->
-      <div class="modal-body mopdal-area">
+      <div class="modal-body modal-area">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
           <%= form_with(model: @editnotification, url: attendances_edit_update_user_path(current_user), method: :patch, local: true) do |f| %>
             <% @edit_notificated_group.each do |key, edit_notifications| %>
