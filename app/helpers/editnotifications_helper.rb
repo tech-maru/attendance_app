@@ -52,6 +52,5 @@ module EditnotificationsHelper
   def app_editapp_user(user_id)
     @visitor_user = User.find(user_id).name
   end
-    
   
 end

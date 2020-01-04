@@ -19,8 +19,8 @@
             <tr>
               <td><%= l(day.worked_on, format: :short) %></td>
               <td class="<%= wday_color(day.worked_on.wday) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-              <td><%= editapp.time_select :after_started_at, include_blank: true, ignore_data:true, class: "form-control" %></td>
-              <td><%= editapp.time_select :after_finished_at, include_blank: true, ignore_data:true, class: "form-control" %></td>
+              <td><%= editapp.time_field :after_started_at, include_blank: true, default: { year: nil, month: nil, day: nil, hour: nil, minutes: nil}, ignore_data:true, class: "form-control" %></td>
+              <td><%= editapp.time_field :after_finished_at, include_blank: true, default: { year: nil, mnonth: nil, day: nil, hour: nil, minutes: nil}, ignore_data:true, class: "form-control" %></td>
               <td><%= editapp.check_box :next_day, {},checked_value = "true",unchecked_value = "false" %></td>
               <td>
                 <% if day.finished_at.present? && day.started_at.present? %>
