@@ -10,7 +10,11 @@
             <li><%= link_to "出勤社員一覧", going_to_work_path %></li>
             <li><%= link_to "拠点情報の修正", bases_path %></li>
             <li><%= link_to "基本情報の更新", basic_info_path %></li>
+            <% if current_user.admin? %>
+            <li><%= link_to "ログアウト", logout_path, method: :delete %></li>
+            <% end %>
           <% end %>
+          <% unless current_user.admin? %>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <%= @current_user.name %> <b class="caret"></b>
@@ -24,6 +28,7 @@
                 </li>
               </ul>
            </li>
+           <% end %>
         </ul>
       </nav>
     <% else %>
