@@ -33,8 +33,14 @@ class SessionsController < ApplicationController
     redirect_to user
   end
   
-  def superior_user
+  def superior_b_user
     user = User.find(2)
+    log_in user
+    redirect_to user
+  end
+  
+  def superior_a_user
+    user = User.find(3)
     log_in user
     redirect_to user
   end

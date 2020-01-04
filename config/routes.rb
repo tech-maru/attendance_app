@@ -12,7 +12,8 @@ Rails.application.routes.draw do
   get '/test_login_a', to: 'sessions#general_user_a'
   get '/test_login_b', to: 'sessions#general_user_b'
   get '/test_admin', to: 'sessions#admin_user'
-  get '/test_superior', to: 'sessions#superior_user'
+  get '/test_superior_b', to: 'sessions#superior_b_user'
+  get '/test_superior_a', to: 'sessions#superior_a_user'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
   resources :bases
