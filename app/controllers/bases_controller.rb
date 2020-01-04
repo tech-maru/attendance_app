@@ -39,7 +39,7 @@ class BasesController < ApplicationController
   # PATCH/PUT /bases/1.json
   def update
       if @base.update(basis_params)
-        flash[:success] = "#{@base.name}を登録しました。"
+        flash[:success] = "#{@base.name}を編集しました。"
         redirect_to bases_path
       else
         flash[:danger] = "登録に失敗しました。再度入力してください。"
