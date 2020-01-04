@@ -1,12 +1,15 @@
 class OvertimenotificationsController < ApplicationController
   before_action :set_attendance, only: [:new, :create]
-  before_action :overtime_notification, only: :update
+  before_action :overtime_notification, only: :overtime_update
+  before_action :correct_user, only: :create
+  before_action :superior_user, only: :overtime_update
   
   def new
     @overtimenotification = @user.overtimenotifications.new
   end
   
   def create
+    @user = User.find(params[:user_id])
     temp = Overtimenotification.find_by(attendance_id: params[:attendance_id])
     if temp.blank?
       @overtimenotification = @user.overtimenotifications.new(overtimenotification_params)
@@ -25,9 +28,6 @@ class OvertimenotificationsController < ApplicationController
         redirect_to user_url(current_user)
       end
     end
-  end
-  
-  def show
   end
   
   def overtime_update

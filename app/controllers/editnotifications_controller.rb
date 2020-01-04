@@ -1,4 +1,6 @@
 class EditnotificationsController < ApplicationController
+  before_action :set_user, only: :edit_app
+  before_action :correct_user, only: :edit_app
   
   def new
   end
@@ -17,16 +19,6 @@ class EditnotificationsController < ApplicationController
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力データがあった為、申請をキャンセルしました。"
     redirect_to attendances_edit_one_month_user_url(date: params[:date].to_date.beginning_of_month)
-  end
-  
-  def edit_update
-    edit_update_params.each do |id, item|
-      if item[:checked] == "true"
-        edit_notification = Editnotification.find_by(id: id)
-        edit_notification.update_attributes(item)
-      end
-    end
-     redirect_to user_url(current_user)
   end
   
   private

@@ -34,6 +34,14 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def superior_user
+    unless current_user.superior? || current_user.admin?
+      flash[:danger] = "不正なログインです。"
+      redirect_to(root_url)
+    end
+  end
+    
+  
   def cannot_edit_admin_info
     @admin_users = User.where(admin: true)
     @admin_users.each do |user|

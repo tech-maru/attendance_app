@@ -1,5 +1,8 @@
 class AttendancenotificationsController < ApplicationController
   before_action :attendance_notification, only: :index
+  before_action :set_user, only: :new
+  before_action :correct_user, only: :new
+  before_action :superior_user, only: :update
   
   def new
     @user = User.find_by(id: params[:id])
