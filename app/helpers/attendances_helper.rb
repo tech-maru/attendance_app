@@ -41,5 +41,10 @@ module AttendancesHelper
       @color = "text-default"
     end
   end
-
+  
+  def csv_type(datetime)
+    if datetime.present?
+      format("%.2f", (datetime.hour * 60 + datetime.min) /60.0)
+    end
+  end
 end

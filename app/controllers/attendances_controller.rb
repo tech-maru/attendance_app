@@ -67,7 +67,7 @@ class AttendancesController < ApplicationController
     if params[:user].present? 
       first_day = Time.zone.local(params[:user]["result(1i)"].to_i, params[:user]["result(2i)"].to_i).beginning_of_month
       last_day = first_day.end_of_month
-      @search_attendances = Attendance.where(worked_on: first_day..last_day)
+      @search_attendances = @user.attendances.where(worked_on: first_day..last_day)
       respond_to do |format|
         format.any
         format.js

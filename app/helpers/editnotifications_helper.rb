@@ -9,7 +9,7 @@ module EditnotificationsHelper
   
   # 上長が承認した残業内容
   def applicated_edit_notification(attendance)
-    if applicated_edit_notification = @user.editnotifications.find_by(attendance_id: attendance.id)
+    if applicated_edit_notification = @user.editnotifications.where(attendance_id: attendance.id).where(checked: true)
       @applicated_before_started_at = applicated_edit_notification.before_started_at
       @applicated_before_finished_at = applicated_edit_notification.before_finished_at
       @applicated_after_started_at = applicated_edit_notification.after_started_at
@@ -22,7 +22,7 @@ module EditnotificationsHelper
   
   # 申請先ユーザーの名前
   def edit_visited_user(attendance)
-    if attendance.editnotification.present? && attendance.editnotification.checked != true
+    if attendance.editnotification.present? 
       if attendance.editnotification.visited_id.present? && attendance.editnotification.visited_id != 0
         @edit_visited_user = User.find(attendance.editnotification.visited_id).name
       end
@@ -53,8 +53,12 @@ module EditnotificationsHelper
     @visitor_user = User.find(user_id).name
   end
   
-  def applicated_edit_overtime(after_finished_at, user)
-    format("%.2f", applicated_overtime = (((after_finished_at.floor_to(15.minutes).to_f - user.designated_work_end_time.to_f) / 60) / 60.0 ))
+  def edit_overtime(after_finished_at, user)
+    @app_edit = after_finished_at.floor_to(15.minutes)
+    @app_edit_time = ((@app_edit.hour * 60) + @app_edit.min) / 60.0
+    @user_des_end = user.designated_work_end_time
+    @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
+    format("%.2f", @overtime = @app_edit_time - @user_des_end_time)
   end
   
 end

@@ -11,6 +11,7 @@ class EditnotificationsController < ApplicationController
         editnotificaiton = Editnotification.find(id)
         if edit_params[:visited_id].to_i >= 1
           editnotificaiton.update_attributes!(edit_params)
+          editnotificaiton.update(checked: false)
           waiting_status(editnotificaiton)
         end
       end

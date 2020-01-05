@@ -157,6 +157,7 @@
           <% if day.finished_at.present? && day.started_at.present? %>
             <td>
               <%= @str_times = working_time(day.finished_at.floor_to(15.minutes), day.started_at.floor_to(15.minutes)) %>
+              <% @total_working_times = @total_working_times.to_f + @str_times.to_f %>
             </td>
           <% else %>
             <td></td>
@@ -171,11 +172,14 @@
             <td></td>
           <% end %>
           <!--時間外時間-->
-          <% if applicated_overtime_detail(day) %>
-            <td><%= applicated_overtime(scheduled_end_time, @user) %></td>
+          <% if day.editnotification.present? && day.editnotification.checked == true %>
+            <td><%= edit_overtime(day.finished_at, @user) if @overtime.to_i > 0 %></td>
+            <td></td>
+          <% elsif applicated_overtime_detail(day) %>
+            <td><%= overtime(day.overtimenotification, @user) %></td>
             <td><%= @applicated_note %></td>
           <% else %>
-            <td><%= applicated_edit_overtime(day.finished_at, @user) if day.started_at.present? && day.finished_at.present? %></td>
+            <td><%= edit_overtime(day.finished_at, @user) if day.started_at.present? && day.finished_at.present? && @overtime.to_i > 0 %></td>
             <td></td>
           <% end %>
           <td>
@@ -202,7 +206,7 @@
         <td class="col-md-1">累計</td>
         <td class="col-md-3">日数：<span><%= l(@last_day, format: :short_day) %>日</span></td>
         <td class="col-md-4">月間勤務日数：<span><%= worked_on_sum %>日</span></td>
-        <td>月間在社時間：<span><%= total_working_time(@str_times) %></span></td>
+        <td>月間在社時間：<span><%= @total_working_times %></span></td>
         <td class="text-danger"><%= @comment if set_attendance_applicate_status %></td>
       </tr>
   </table>

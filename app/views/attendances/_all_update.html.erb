@@ -28,7 +28,7 @@
                 <% end %>
               </td>
               <td><%= editapp.text_field :note %></td>
-              <td><%= editapp.collection_select :visited_id, User.where(superior: true).where.not(id: current_user), :id, :name, {include_blank: true} %></td>
+              <td><%= editapp.collection_select :visited_id, User.where(superior: true).where.not(id: current_user), :id, :name, {selected: "", include_blank: true} %></td>
             </tr>
           <% end %>
         </tbody>

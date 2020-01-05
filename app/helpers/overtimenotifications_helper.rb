@@ -54,10 +54,11 @@ module OvertimenotificationsHelper
   end
   
   def overtime(applicate_notification, user)
-    format("%.2f", overtime = (((applicate_notification.scheduled_end_time.floor_to(15.minutes).to_f - user.designated_work_end_time.to_f) / 60) / 60.0 ))
+    @app_sche = applicate_notification.scheduled_end_time.floor_to(15.minutes)
+    @app_sche_time = ((@app_sche.hour * 60) + @app_sche.min) / 60.0
+    @user_des_end = user.designated_work_end_time
+    @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
+    format("%.2f", overtime = @app_sche_time - @user_des_end_time)
   end
   
-  def applicated_overtime(scheduled_end_time, user)
-    format("%.2f", applicated_overtime = (((scheduled_end_time.floor_to(15.minutes).to_f - user.designated_work_end_time.to_f) / 60) / 60.0 ))
-  end
 end
