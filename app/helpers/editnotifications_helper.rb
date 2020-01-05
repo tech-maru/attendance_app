@@ -9,14 +9,15 @@ module EditnotificationsHelper
   
   # 上長が承認した残業内容
   def applicated_edit_notification(attendance)
-    if applicated_edit_notification = @user.editnotifications.where(attendance_id: attendance.id).where(checked: true)
-      @applicated_before_started_at = applicated_edit_notification.before_started_at
-      @applicated_before_finished_at = applicated_edit_notification.before_finished_at
-      @applicated_after_started_at = applicated_edit_notification.after_started_at
-      @applicated_after_finished_at = applicated_edit_notification.after_finished_at
-      @applicated_edit_note = applicated_edit_notification.note
-    else
-      return false
+    if applicated_edit_notification = @user.editnotifications.find_by(attendance_id: attendance.id)
+      if applicated_edit_notification.checked == true
+        @applicated_before_started_at = applicated_edit_notification.before_started_at
+        @applicated_before_finished_at = applicated_edit_notification.before_finished_at
+        @applicated_after_started_at = applicated_edit_notification.after_started_at
+        @applicated_after_finished_at = applicated_edit_notification.after_finished_at
+        @applicated_edit_next_day = applicated_edit_notification.next_day
+        @applicated_edit_note = applicated_edit_notification.note
+      end
     end
   end
   
@@ -58,7 +59,19 @@ module EditnotificationsHelper
     @app_edit_time = ((@app_edit.hour * 60) + @app_edit.min) / 60.0
     @user_des_end = user.designated_work_end_time
     @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
-    format("%.2f", @overtime = @app_edit_time - @user_des_end_time)
+    if @app_edit_time - @user_des_end_time > 0
+      format("%.2f", @overtime = @app_edit_time - @user_des_end_time)
+    end
+  end
+  
+  def edit_n_overtime(after_finished_at, user)
+    @app_edit = after_finished_at.floor_to(15.minutes)
+    @app_edit_time = ((@app_edit.hour * 60) + @app_edit.min + 1440) / 60.0
+    @user_des_end = user.designated_work_end_time
+    @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
+    if @app_edit_time - @user_des_end_time > 0
+      format("%.2f", @overtime = @app_edit_time - @user_des_end_time)
+    end
   end
   
 end

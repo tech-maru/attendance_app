@@ -51,7 +51,7 @@ class AttendancesController < ApplicationController
         edit_notification = Editnotification.find_by(id: id)
         edit_notification.update_attributes(item)
         attendance = Attendance.find_by(id: edit_notification.attendance_id)
-        attendance.update_attributes(started_at: edit_notification.after_started_at, finished_at: edit_notification.after_finished_at)
+        attendance.update_attributes!(started_at: edit_notification.after_started_at, finished_at: edit_notification.after_finished_at)
       end
     end
      redirect_to user_url(current_user)

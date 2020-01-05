@@ -12,7 +12,7 @@ class Editnotification < ApplicationRecord
   end
   
   def started_at_than_finished_at_fast_if_invalid
-    if after_started_at? && after_finished_at?
+    if after_started_at? && after_finished_at? && next_day == false
       errors.add(:after_started_at, "より早い退社は無効です") if after_started_at > after_finished_at && visited_id.present?
     end
   end

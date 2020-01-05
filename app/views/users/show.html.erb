@@ -162,7 +162,11 @@
           <% else %>
             <td></td>
           <% end %>
-          <td></td>
+          <% if applicated_edit_notification(day) %>
+            <td><%= @applicated_edit_note %></td>
+          <% else %>
+            <td></td>
+          <% end %>
           <!--終了予定時間-->
           <% if applicated_overtime_detail(day) %>
             <td><%= l(scheduled_end_time = @applicated_scheduled_end_time, format: :time_hour)  %></td>
@@ -172,14 +176,26 @@
             <td></td>
           <% end %>
           <!--時間外時間-->
-          <% if day.editnotification.present? && day.editnotification.checked == true %>
-            <td><%= edit_overtime(day.finished_at, @user) if @overtime.to_i > 0 %></td>
+          <% if applicated_edit_notification(day) %>
+            <td>
+              <% if @applicated_edit_next_day == false %>
+                <%= edit_overtime(day.finished_at, @user) %>
+              <% else %>
+                <%= edit_n_overtime(day.finished_at, @user) %>
+              <% end %>
+            </td>
             <td></td>
           <% elsif applicated_overtime_detail(day) %>
-            <td><%= overtime(day.overtimenotification, @user) %></td>
+            <td>
+              <% if  @applicated_over_next_day == false %>
+                <%= overtime(day.overtimenotification, @user) %>
+              <% else %>
+                <%= n_overtime(day.overtimenotification, @user) %>
+              <% end %>
+            </td>
             <td><%= @applicated_note %></td>
           <% else %>
-            <td><%= edit_overtime(day.finished_at, @user) if day.started_at.present? && day.finished_at.present? && @overtime.to_i > 0 %></td>
+            <td><%= edit_overtime(day.finished_at, @user) if day.started_at.present? && day.finished_at.present? %></td>
             <td></td>
           <% end %>
           <td>

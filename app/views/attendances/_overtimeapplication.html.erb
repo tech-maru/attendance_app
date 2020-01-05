@@ -33,7 +33,13 @@
                         <td class="<%= wday_color(@applicated_worked_on.wday) %>"><%= $days_of_the_week[@applicated_worked_on.wday] %></td>
                         <td><%= l(applicated_notification.scheduled_end_time.floor_to(15.minutes), format: :time) %></td>
                         <td><%= l(@applicated_user_designated_end_time, format: :time) %></td>
-                        <td><%= overtime(applicated_notification, @applicated_user) %></td>
+                        <td>
+                          <% if applicated_notification.next_day == false %>
+                            <%= overtime(applicated_notification, @applicated_user) %>
+                          <% else %>
+                            <%= n_overtime(applicated_notification, @applicated_user) %>
+                          <% end %>
+                        </td>
                         <td><%= applicated_notification.note %></td>
                         <td><%= fi.select :status, ["", "申請中", "承認", "否認"], class: "form-control" %></td>
                         <td><%= fi.check_box :checked, {}, checked_value = "true",unchecked_value = "false"%></td>
