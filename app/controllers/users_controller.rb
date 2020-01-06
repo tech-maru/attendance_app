@@ -27,8 +27,13 @@ class UsersController < ApplicationController
   end
   
   def import
-    User.import(params[:file])
-    redirect_to users_url
+    if User.import(params[:file])
+      flash[:success] = "CSVライルを取り込みました。"
+      redirect_to users_url
+    else
+      flash[:danger] = "CSVライルを取り込みに失敗しました。"
+      redirect_to users_url
+    end
   end
   
   def going_to_work
