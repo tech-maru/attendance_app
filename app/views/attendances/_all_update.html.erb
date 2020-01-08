@@ -1,5 +1,5 @@
 <div> 
-  <%= form_with(model: @user, url: attendances_edit_app_user_path(date: @first_day), local: true, method: :patch) do |f| %>
+  <%= form_with(model: @user, url: attendances_edit_app_user_path(date: @first_day), local: true, method: :patch, id: "edit_onemonth") do |f| %>
     <table class="table table-bordered table-condensed table-hover edit_one_month-table">
       <thead>
         <tr>
@@ -16,20 +16,75 @@
       <% @attendances.each do |day| %>
         <tbody>
           <%= f.fields_for "editnotification[]", day.editnotification do |editapp| %>
-            <tr>
-              <td><%= l(day.worked_on, format: :short) %></td>
-              <td class="<%= wday_color(day.worked_on.wday) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-              <td><%= editapp.time_field :after_started_at, include_blank: true, default: { year: nil, month: nil, day: nil, hour: nil, minutes: nil}, ignore_data:true, class: "form-control" %></td>
-              <td><%= editapp.time_field :after_finished_at, include_blank: true, default: { year: nil, mnonth: nil, day: nil, hour: nil, minutes: nil}, ignore_data:true, class: "form-control" %></td>
-              <td><%= editapp.check_box :next_day, {},checked_value = "true",unchecked_value = "false" %></td>
-              <td>
-                <% if day.finished_at.present? && day.started_at.present? %>
-                  <%= @str_times = working_time(day.finished_at, day.started_at) %>
-                <% end %>
-              </td>
-              <td><%= editapp.text_field :note %></td>
-              <td><%= editapp.collection_select :visited_id, User.where(superior: true).where.not(id: current_user), :id, :name, {selected: "", include_blank: true} %></td>
-            </tr>
+              <tr>
+                <td><%= l(day.worked_on, format: :short) %></td>
+                <td class="<%= wday_color(day.worked_on.wday) %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
+                <% if Date.current >= day.worked_on %>
+                  <% @id = day.editnotification.id %>
+                    <td><%= editapp.time_field :after_started_at, include_blank: true, default: { year: nil, month: nil, day: nil, hour: nil, minutes: nil}, ignore_data:true, class: "form-control" %></td>
+                    <td><%= editapp.time_field :after_finished_at, include_blank: true, default: { year: nil, mnonth: nil, day: nil, hour: nil, minutes: nil}, ignore_data:true, class: "form-control" %></td>
+                    <td><%= editapp.check_box :next_day, {}, true, false %></td>
+                    <td id= "str_times_<%= @id %>"></td>
+                    <td><%= editapp.text_field :note %></td>
+                    <td><%= editapp.collection_select :visited_id, User.where(superior: true).where.not(id: current_user), :id, :name, {selected: "", include_blank: true} %></td>
+                  <% else %>
+                    <td><%= editapp.time_field :after_started_at, include_blank: true, default: { year: nil, month: nil, day: nil, hour: nil, minutes: nil}, ignore_data:true, readonly: true, class: "form-control" %></td>
+                    <td><%= editapp.time_field :after_finished_at, include_blank: true, default: { year: nil, mnonth: nil, day: nil, hour: nil, minutes: nil}, ignore_data:true, readonly: true, class: "form-control" %></td>
+                    <td><%= editapp.check_box :next_day, {disabled: 'disabled'}, checked_value = "true",unchecked_value = "false" %></td>
+                    <td></td>
+                    <td><%= editapp.text_field :note, readonly: true %></td>
+                    <td><%= editapp.collection_select :visited_id, User.where(superior: true).where.not(id: current_user), :id, :name, {selected: "", include_blank: true}, disabled: true %></td>
+                  <% end %>
+              </tr>
+              <script>
+                $(function(){
+                  $("#user_editnotification_<%= @id %>_after_finished_at").change(function(){
+                    var finish = $("#user_editnotification_<%= @id %>_after_finished_at").val();
+                    var start = $("#user_editnotification_<%= @id %>_after_started_at").val();
+                    var finish_arrey = finish.split(':');
+                    var finish_date = Number(finish_arrey[0]) * 60 + Number(finish_arrey[1]);
+                    var start_arrey = start.split(':');
+                    var start_date = Number(start_arrey[0]) * 60 + Number(start_arrey[1]);
+                    var str_times = ((finish_date - start_date) / 60.00).toFixed(2);
+                    if ( !isNaN(str_times)){
+                    $("#str_times_<%= @id %>").text(str_times);
+                    }
+                  });
+                });
+                
+                $(function(){
+                  $("#user_editnotification_<%= @id %>_after_started_at").change(function(){
+                    var finish = $("#user_editnotification_<%= @id %>_after_finished_at").val();
+                    var start = $("#user_editnotification_<%= @id %>_after_started_at").val();
+                    var finish_arrey = finish.split(':');
+                    var finish_date = Number(finish_arrey[0]) * 60 + Number(finish_arrey[1]);
+                    var start_arrey = start.split(':');
+                    var start_date = Number(start_arrey[0]) * 60 + Number(start_arrey[1]);
+                    var str_times = ((finish_date - start_date) / 60.00).toFixed(2);
+                    if ( !isNaN(str_times)){
+                    $("#str_times_<%= @id %>").text(str_times);
+                    }
+                  });
+                });
+      
+                $(function(){
+                  $('input[name="user[editnotification][<%= @id %>][next_day]"]').change(function(){
+                    var finish = $("#user_editnotification_<%= @id %>_after_finished_at").val();
+                    var start = $("#user_editnotification_<%= @id %>_after_started_at").val();
+                    var check = $("#user_editnotification_<%= @id %>_next_day").prop('checked');
+                    var finish_arrey = finish.split(':');
+                    var finish_date = Number(finish_arrey[0]) * 60 + Number(finish_arrey[1]);
+                    var start_arrey = start.split(':');
+                    var start_date = Number(start_arrey[0]) * 60 + Number(start_arrey[1]);
+                    if (check){
+                      var str_times = ((finish_date + 1440 - start_date) / 60.00).toFixed(2);
+                    } else {
+                      var str_times = ((finish_date - start_date) / 60.00).toFixed(2);
+                    }
+                    $("#str_times_<%= @id %>").text(str_times);  
+                  });
+                });
+              </script>
           <% end %>
         </tbody>
      <% end %>

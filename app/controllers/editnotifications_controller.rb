@@ -30,4 +30,5 @@ class EditnotificationsController < ApplicationController
     def edit_update_params
       params.permit(editnotification: [:status, :checked])[:editnotification]
     end
+    
 end

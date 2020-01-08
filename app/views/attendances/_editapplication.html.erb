@@ -55,7 +55,7 @@
                       <td><%= l(applicated_notification.after_finished_at, format: :time_hour) %></td>
                       <td><%= l(applicated_notification.after_finished_at, format: :time_min) %></td>
                       <td><%= applicated_notification.note %>
-                      <td><%= fi.select :status, ["", "申請中", "承認", "否認"], {prompt: "申請中"} %></td>
+                      <td><%= fi.select :status, ["なし", "申請中", "承認", "否認"], {prompt: "申請中"} %></td>
                       <td><%= fi.check_box :checked, {}, checked_value = "true",unchecked_value = "false" %></td>
                       <td><%= link_to "確認", user_path(key, date:@applicated_worked_on.beginning_of_month), target: "_blank", class: "btn btn-primary td-btn" %></td>
                   </tr>

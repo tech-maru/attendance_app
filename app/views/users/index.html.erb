@@ -67,13 +67,13 @@
                 <%= f.password_field :password_confirmation, class: "form-control", value: user.password_digest %>
                 
                 <%= f.label :基本勤務時間, class: "label-form" %>
-                <%= f.time_field :basic_work_time, class: "form-control", value: user.basic_work_time %>
+                <%= f.time_field :basic_work_time, class: "form-control" %>
                 
                 <%= f.label :指定勤務開始時間, class: "label-form" %>
-                <%= f.time_field :designated_work_start_time, class: "form-control", value: user.designated_work_start_time %>
+                <%= f.time_field :designated_work_start_time, class: "form-control" %>
                 
                 <%= f.label :指定勤務終了時間, class: "label-form" %>
-                <%= f.time_field :designated_work_end_time, class: "form-control", value: user.designated_work_end_time %>
+                <%= f.time_field :designated_work_end_time, class: "form-control" %>
                   
                 <%= f.submit "編集", class: "btn btn-primary btn-block btn-signup" %>
                   

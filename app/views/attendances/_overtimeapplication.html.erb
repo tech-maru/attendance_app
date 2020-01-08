@@ -41,7 +41,7 @@
                           <% end %>
                         </td>
                         <td><%= applicated_notification.note %></td>
-                        <td><%= fi.select :status, ["", "申請中", "承認", "否認"], class: "form-control" %></td>
+                        <td><%= fi.select :status, ["なし", "申請中", "承認", "否認"], class: "form-control" %></td>
                         <td><%= fi.check_box :checked, {}, checked_value = "true",unchecked_value = "false"%></td>
                         <td><%= link_to "確認", user_path(@applicated_user, date:@applicated_worked_on.beginning_of_month), target: "_blank", class: "btn btn-primary td-btn" %></td>
                     </tr>

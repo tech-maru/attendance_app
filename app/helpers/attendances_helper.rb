@@ -44,7 +44,7 @@ module AttendancesHelper
   
   def csv_type(datetime)
     if datetime.present?
-      format("%.2f", (datetime.hour * 60 + datetime.min) /60.0)
+      l(datetime.floor_to(15.minutes), format: :time)
     end
   end
 end
