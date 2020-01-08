@@ -8,7 +8,7 @@ User.create!(name: "Admin User",
              password_confirmation: "sample1@email.com",
              admin: "true")
              
-User.create!(name: "Superior User",
+User.create!(name: "上長B",
              email: "sample2@email.com",
              employee_number: "2",
              affiliation: "技術部",
@@ -19,7 +19,7 @@ User.create!(name: "Superior User",
              superior: "true",
              admin: "false")
 
-User.create!(name: "Superior User2",
+User.create!(name: "上長A",
              email: "sample3@email.com",
              employee_number: "3",
              affiliation: "営業部",
