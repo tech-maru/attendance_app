@@ -230,7 +230,7 @@
 
 <!--１ヶ月勤怠申請フォーム-->
 <% if current_user?(@user) || current_user.admin? %>
-  <% if @text == "所属長承認未" %>
+  <% unless @text == "承認申請中" %>
     <div class="applicate_container">
       <div class="month_applicate">
         <p><%= @text %></p>

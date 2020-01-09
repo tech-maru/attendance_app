@@ -41,6 +41,11 @@ class UsersController < ApplicationController
   def show
     @users = User.all
     @attendance = Attendance.find(params[:id])
+    if @user.attendancenotifications.find_by(applicate_month: @first_day.to_datetime).present?
+      @attendancenotification = @user.attendancenotifications.find_by(applicate_month: @first_day.to_datetime).present?
+    else
+      @attendancenotification = @user.attendancenotifications.new
+    end
   end
   
   def new

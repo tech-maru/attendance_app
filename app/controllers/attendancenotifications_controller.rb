@@ -6,15 +6,26 @@ class AttendancenotificationsController < ApplicationController
   
   def new
     @user = User.find_by(id: params[:id])
-    @attendancenotification = @user.attendancenotifications.new(visited_id: params[:user][:attendancenotifications][:visited_id])
-    @attendancenotification.applicate_month = params[:user][:attendancenotifications][:date].to_datetime
-    @attendancenotification.status = "申請中"
-    @attendancenotification.checked = false
-    if @attendancenotification.save
-      redirect_to user_url(date: params[:user][:attendancenotifications][:date].to_date)
-    else
-      flash[:danger] = "所属長を選択して再申請してください。"
-      redirect_to user_url(date: params[:user][:attendancenotifications][:date].to_date)
+    temp = @user.attendancenotifications.find_by(applicate_month: params[:user][:attendancenotifications][:date].to_datetime)
+    if temp.blank?
+      @attendancenotification = @user.attendancenotifications.new(visited_id: params[:user][:attendancenotifications][:visited_id])
+      @attendancenotification.applicate_month = params[:user][:attendancenotifications][:date].to_datetime
+      @attendancenotification.status = "申請中"
+      @attendancenotification.checked = false
+      if @attendancenotification.save
+        redirect_to user_url(date: params[:user][:attendancenotifications][:date].to_date)
+      else
+         flash[:danger] = "所属長を選択して再申請してください。"
+        redirect_to user_url(date: params[:user][:attendancenotifications][:date].to_date)
+      end
+    else 
+      if temp.update_attributes(visited_id: params[:user][:attendancenotifications][:visited_id])
+        temp.update(status: "申請中", checked: false)
+        redirect_to user_url(date: params[:user][:attendancenotifications][:date].to_date)
+      else
+        flash[:danger] = "所属長を選択して再申請してください。"
+        redirect_to user_url(date: params[:user][:attendancenotifications][:date].to_date)
+      end
     end
   end
   
