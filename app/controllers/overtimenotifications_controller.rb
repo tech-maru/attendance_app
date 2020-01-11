@@ -1,7 +1,7 @@
 class OvertimenotificationsController < ApplicationController
   before_action :set_attendance, only: [:new, :create]
   before_action :overtime_notification, only: :overtime_update
-  before_action :correct_user, only: :create
+  before_action :attendance_correct_user, only: :create
   before_action :superior_user, only: :overtime_update
   
   def new

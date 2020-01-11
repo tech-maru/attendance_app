@@ -1,6 +1,6 @@
 class EditnotificationsController < ApplicationController
   before_action :set_user, only: :edit_app
-  before_action :correct_user, only: :edit_app
+  before_action :attendance_correct_user, only: :edit_app
   
   def new
   end

@@ -156,7 +156,7 @@
           <!--在社時間場合分け-->
           <% if day.finished_at.present? && day.started_at.present? %>
             <td>
-              <%= @str_times = working_time(day.finished_at.floor_to(15.minutes), day.started_at.floor_to(15.minutes)) %>
+              <%= @str_times = working_time(day.editnotification, day.finished_at.floor_to(15.minutes), day.started_at.floor_to(15.minutes)) %>
               <% @total_working_times = @total_working_times.to_f + @str_times.to_f %>
             </td>
           <% else %>

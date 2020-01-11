@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :edit_one_week, :edit_update, :past_log, :output]
   before_action :logged_in_user, only: [:update, :overtime, :edit_one_month, :edit_one_week]
-  before_action :admin_or_correct_user, only: [:update, :edit_one_month, :edit_one_week, :all_update]
+  before_action :attendance_correct_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :output]
   before_action :overtime_notification, only: :overtime_app_index
   before_action :set_editnotification, only: :edit_one_month
@@ -89,14 +89,6 @@ class AttendancesController < ApplicationController
   private
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
-    end
-    
-    def admin_or_correct_user
-      @user = User.find(params[:user_id]) if @user.blank?
-      unless current_user?(@user) || current_user.admin?
-       flash[:danger] = "アクセスできません。"
-       redirect_to root_url
-      end
     end
     
     def edit_update_params

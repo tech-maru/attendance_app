@@ -20,8 +20,14 @@ module AttendancesHelper
     @edit_attendances = @attendances.group_by{|item| item.id}
   end
   
-  def working_time(finish, start)
-    format("%.2f", (((finish - start) / 60) / 60.0))
+  def working_time(editnotification,finish, start)
+    if editnotification.present? && editnotification.next_day == true
+      finished = finish.hour * 60 + 1440 + finish.min
+      started = start.hour * 60 + start.min
+      format("%.2f", ((finished - started) / 60.0))
+    else
+      format("%.2f", (((finish - start) / 60) / 60.0))
+    end
   end
   
   def total_working_time(str_times)
