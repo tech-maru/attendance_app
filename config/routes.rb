@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   root 'static_pages#top'
   
   get '/signup', to: 'users#new'
+  post '/create', to: 'users#create'
   get '/index_result', to: 'users#index_result'
   get 'going_to_work', to: 'users#going_to_work'
   get '/basic_info', to: 'users#basic_info'
