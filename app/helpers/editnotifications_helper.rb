@@ -17,7 +17,11 @@ module EditnotificationsHelper
         @applicated_after_finished_at = applicated_edit_notification.after_finished_at
         @applicated_edit_next_day = applicated_edit_notification.next_day
         @applicated_edit_note = applicated_edit_notification.note
+      else
+        return false
       end
+    else
+      return false
     end
   end
   
@@ -52,6 +56,14 @@ module EditnotificationsHelper
   
   def app_editapp_user(user_id)
     @visitor_user = User.find(user_id).name
+  end
+  
+  def edit_working_time(finish, staert)
+    if finish.present?
+      finished_at = (@after_finished_at.hour * 60 + @after_finished_at.min) / 60.0
+      started_at = (@after_started_at.hour * 60 + @after_started_at.min) / 60.0
+      format("%.2f", @edit_working_time = finished_at - started_at)
+    end
   end
   
   def edit_overtime(after_finished_at, user)
