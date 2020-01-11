@@ -20,7 +20,14 @@ class ApplicationController < ActionController::Base
   end
 
 # ページの閲覧権限
-  def correct_user
+  def user_correct_user
+    unless current_user?(@user) || current_user.admin?
+      flash[:danger] = "不正なログインです。"
+      redirect_to(root_url)
+    end
+  end
+  
+  def attendance_correct_user
     unless current_user?(@user) || current_user.superior?
       flash[:danger] = "不正なログインです。"
       redirect_to(root_url)

@@ -11,8 +11,8 @@
         <button class="btn btn-primary"><%= link_to "→", user_path(date: @first_day.next_month) %></button>
         <% end %>
       </td>
-      <td colspan="2">指定勤務開始時間<span><%= l(@user.designated_work_start_time, format: :time) %></span></br>
-                      指定勤務終了時間<span><%= l(@user.designated_work_end_time, format: :time) %></span>
+      <td colspan="2">指定勤務開始時間<span><%= l(@user.designated_work_start_time, format: :time) if @user.designated_work_start_time.present? %></span></br>
+                      指定勤務終了時間<span><%= l(@user.designated_work_end_time, format: :time) if @user.designated_work_end_time.present?  %></span>
       </td>
       <td colspan="2">基本時間
       <span>
