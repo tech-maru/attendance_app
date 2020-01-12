@@ -57,17 +57,19 @@ module OvertimenotificationsHelper
   def overtime(applicate_notification, user)
     @app_sche = applicate_notification.scheduled_end_time.floor_to(15.minutes)
     @app_sche_time = ((@app_sche.hour * 60) + @app_sche.min) / 60.0
-    @user_des_end = user.designated_work_end_time
-    @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
-    format("%.2f", overtime = @app_sche_time - @user_des_end_time)
+    if @user_des_end = user.designated_work_end_time
+      @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
+      format("%.2f", overtime = @app_sche_time - @user_des_end_time)
+    end
   end
   
   def n_overtime(applicate_notification, user)
     @app_sche = applicate_notification.scheduled_end_time.floor_to(15.minutes)
     @app_sche_time = ((@app_sche.hour * 60) + @app_sche.min + 1440) / 60.0
-    @user_des_end = user.designated_work_end_time
-    @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
-    format("%.2f", overtime = @app_sche_time - @user_des_end_time)
+    if @user_des_end = user.designated_work_end_time
+      @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
+      format("%.2f", overtime = @app_sche_time - @user_des_end_time)
+    end
   end
   
 end

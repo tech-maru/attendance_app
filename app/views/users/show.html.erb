@@ -1,4 +1,9 @@
 <% provide(:title, @user.name) %>
+<% if @user.designated_work_start_time.nil? || @user.designated_work_end_time.nil? %>
+<div class = "text-danger bg-danger designated_aleart">
+  指定勤務時間が設定されていませんので、ユーザー情報の更新より設定してください。
+</div>
+<% end %>
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>

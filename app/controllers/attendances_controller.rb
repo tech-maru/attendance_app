@@ -1,6 +1,7 @@
 class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :edit_one_week, :edit_update, :past_log, :output]
   before_action :logged_in_user, only: [:update, :overtime, :edit_one_month, :edit_one_week]
+  before_action :set_attendance_user, only: [:update]
   before_action :attendance_correct_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :output]
   before_action :overtime_notification, only: :overtime_app_index
@@ -94,4 +95,5 @@ class AttendancesController < ApplicationController
     def edit_update_params
       params.permit(editnotification: [:status, :checked])[:editnotification]
     end
+    
 end

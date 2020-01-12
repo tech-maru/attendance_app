@@ -11,7 +11,7 @@ class OvertimenotificationsController < ApplicationController
   def create
     @user = User.find(params[:user_id])
     temp = Overtimenotification.find_by(attendance_id: params[:attendance_id])
-    if check < 0 && params[:overtimenotification][:next_day] == "false"
+    if check.present? && check < 0 && params[:overtimenotification][:next_day] == "false"
       flash[:danger] = "残業申請は指定勤務時間より遅い時間を指定してください。"
       redirect_to user_url(current_user)
     else
@@ -62,6 +62,8 @@ class OvertimenotificationsController < ApplicationController
     end
     
     def check
-      (overtimenotification_params["scheduled_end_time(4i)"].to_i * 60 + overtimenotification_params["scheduled_end_time(5i)"].to_i) - (@user.designated_work_end_time.hour * 60 + @user.designated_work_end_time.min) 
+      if @user.designated_work_start_time.present? && @user.designated_work_end_time.present?
+        (overtimenotification_params["scheduled_end_time(4i)"].to_i * 60 + overtimenotification_params["scheduled_end_time(5i)"].to_i) - (@user.designated_work_end_time.hour * 60 + @user.designated_work_end_time.min) 
+      end
     end
 end

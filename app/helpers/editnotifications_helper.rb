@@ -69,20 +69,22 @@ module EditnotificationsHelper
   def edit_overtime(after_finished_at, user)
     @app_edit = after_finished_at.floor_to(15.minutes)
     @app_edit_time = ((@app_edit.hour * 60) + @app_edit.min) / 60.0
-    @user_des_end = user.designated_work_end_time
-    @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
-    if @app_edit_time - @user_des_end_time > 0
-      format("%.2f", @overtime = @app_edit_time - @user_des_end_time)
+    if @user_des_end = user.designated_work_end_time
+      @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
+      if @app_edit_time - @user_des_end_time > 0
+        format("%.2f", @overtime = @app_edit_time - @user_des_end_time)
+      end
     end
   end
   
   def edit_n_overtime(after_finished_at, user)
     @app_edit = after_finished_at.floor_to(15.minutes)
     @app_edit_time = ((@app_edit.hour * 60) + @app_edit.min + 1440) / 60.0
-    @user_des_end = user.designated_work_end_time
-    @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
-    if @app_edit_time - @user_des_end_time > 0
-      format("%.2f", @overtime = @app_edit_time - @user_des_end_time)
+    if @user_des_end = user.designated_work_end_time
+      @user_des_end_time = ((@user_des_end.hour * 60) + @user_des_end.min) / 60.0
+      if @app_edit_time - @user_des_end_time > 0
+        format("%.2f", @overtime = @app_edit_time - @user_des_end_time)
+      end
     end
   end
   

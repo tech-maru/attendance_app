@@ -1,5 +1,9 @@
 module AttendancesHelper
   
+  def set_attendance_user
+      @user = User.find(params[:user_id])
+  end
+  
   def attendance_started_at(attendance)
     if Date.current == attendance.worked_on
       return "出社" if attendance.started_at.nil?

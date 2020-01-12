@@ -32,7 +32,7 @@
                         <td><%= l(@applicated_worked_on, format: :short) %></td>
                         <td class="<%= wday_color(@applicated_worked_on.wday) %>"><%= $days_of_the_week[@applicated_worked_on.wday] %></td>
                         <td><%= l(applicated_notification.scheduled_end_time.floor_to(15.minutes), format: :time) %></td>
-                        <td><%= l(@applicated_user_designated_end_time, format: :time) %></td>
+                        <td><%= l(@applicated_user_designated_end_time, format: :time) if @applicated_user_designated_end_time.present? %></td>
                         <td>
                           <% if applicated_notification.next_day == false %>
                             <%= overtime(applicated_notification, @applicated_user) %>
