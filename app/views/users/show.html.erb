@@ -202,7 +202,7 @@
             <td><%= edit_overtime(day.finished_at, @user) if day.started_at.present? && day.finished_at.present? %></td>
           <% end %>
           <!--残業メモ-->
-          <% if applicated_overtime_detail(attendance) %>
+          <% if applicated_overtime_detail(day) %>
             <td><%= @applicated_note  %></td>
           <% else %>
             <td></td>
