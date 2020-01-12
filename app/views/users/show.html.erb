@@ -296,6 +296,14 @@
 <script>
 $(function(){
   $("#user_result_2i").change(function(){
+    $("#result_edit").show();
+    Rails.fire($("#date_form")[0], "submit");
+  });
+});
+
+$(function(){
+  $("#user_result_1i").change(function(){
+    $("#result_edit").show();
     Rails.fire($("#date_form")[0], "submit");
   });
 });
@@ -304,6 +312,7 @@ $(function(){
 $(function(){
   $(".past_reset").on("click", function(){
     clearform(this.form);
+    $("#result_edit").hide();
   });
    
   function clearform (form) {
