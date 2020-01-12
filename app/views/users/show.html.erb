@@ -1,7 +1,8 @@
 <% provide(:title, @user.name) %>
 <% if @user.designated_work_start_time.nil? || @user.designated_work_end_time.nil? %>
 <div class = "text-danger bg-danger designated_aleart">
-  指定勤務時間が設定されていませんので、ユーザー情報の更新より設定してください。
+  指定勤務時間が設定されていませんので、ユーザー情報の更新より設定してください。</br>
+  ※各種申請は未入力でも可能ですが、時間外時間の表示がされません。
 </div>
 <% end %>
 <div>
@@ -189,7 +190,6 @@
                 <%= edit_n_overtime(day.finished_at, @user) %>
               <% end %>
             </td>
-            <td></td>
           <% elsif applicated_overtime_detail(day) %>
             <td>
               <% if  @applicated_over_next_day == false %>
@@ -198,9 +198,13 @@
                 <%= n_overtime(day.overtimenotification, @user) %>
               <% end %>
             </td>
-            <td><%= @applicated_note %></td>
           <% else %>
             <td><%= edit_overtime(day.finished_at, @user) if day.started_at.present? && day.finished_at.present? %></td>
+          <% end %>
+          <!--残業メモ-->
+          <% if applicated_overtime_detail(attendance) %>
+            <td><%= @applicated_note  %></td>
+          <% else %>
             <td></td>
           <% end %>
           <td>
